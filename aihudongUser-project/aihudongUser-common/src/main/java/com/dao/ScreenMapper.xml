@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.ScreenMapper" >
+  <resultMap id="BaseResultMap" type="com.model.Screen" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="room_id" property="roomId" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="duration" property="duration" jdbcType="VARCHAR" />
+    <result column="times" property="times" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="resolution" property="resolution" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, username, password, room_id, user_id, duration, times, type, resolution
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from screen
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from screen
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.model.Screen" >
+    insert into screen (id, username, password, 
+      room_id, user_id, duration, 
+      times, type, resolution
+      )
+    values (#{id,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{roomId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{duration,jdbcType=VARCHAR}, 
+      #{times,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{resolution,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.model.Screen" >
+    insert into screen
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="roomId != null" >
+        room_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="duration != null" >
+        duration,
+      </if>
+      <if test="times != null" >
+        times,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="resolution != null" >
+        resolution,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null" >
+        #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="duration != null" >
+        #{duration,jdbcType=VARCHAR},
+      </if>
+      <if test="times != null" >
+        #{times,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="resolution != null" >
+        #{resolution,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.model.Screen" >
+    update screen
+    <set >
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null" >
+        room_id = #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="duration != null" >
+        duration = #{duration,jdbcType=VARCHAR},
+      </if>
+      <if test="times != null" >
+        times = #{times,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="resolution != null" >
+        resolution = #{resolution,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.model.Screen" >
+    update screen
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      room_id = #{roomId,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      duration = #{duration,jdbcType=VARCHAR},
+      times = #{times,jdbcType=INTEGER},
+      type = #{type,jdbcType=VARCHAR},
+      resolution = #{resolution,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <resultMap type="Screen" id="screenMap" autoMapping="true">
+ 	<id column="s_id" property="id"/>
+ 	<result column="s_username" property="username"/>
+  	<association property="room" javaType="Room" autoMapping="true">
+  		<id column="r_id" property="id"/>
+  	</association>
+  	<association property="user" javaType="User" autoMapping="true">
+  		<id column="u_id" property="id"/>
+  		<result column="u_username" property="username"/>
+  	</association>
+  </resultMap>
+  
+  <select id="selectAllScreen" parameterType="java.util.Map" resultMap="screenMap">
+  	select 
+  		s.id s_id, s.username s_username, s.password, s.room_id, s.user_id, s.duration, s.times, s.type, s.resolution,
+  		r.id r_id, r.num, r.position, r.`desc`,
+  		u.id u_id, u.username u_username
+  	from screen s left join room r on s.room_id=r.id
+  	left join user u on s.user_id=u.id
+  	<where>
+  		<if test="id!=null">
+  			and s.id=#{id}
+  		</if>
+  		<if test="username!='' and username!=null">
+  			and s.username=#{username}
+  		</if>
+  		<if test="userId!=null">
+  			and s.user_id=#{userId}
+  		</if>
+  		<if test="duration!='' and duration!=null">
+  			and concat (s.username,r.num,s.id,u.username) like concat ('%',#{duration},'%') 
+  		</if>
+  	</where>
+  </select>
+  
+   <select id="selectAllId" resultType="java.lang.String">
+ 	select id from screen
+ </select>
+</mapper>
