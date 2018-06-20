@@ -73,6 +73,10 @@
 				                   		<i class="fa fa-columns"></i> 
 				                   		<span class="nav-label">屏幕管理</span>
 				                   </a>
+				                   <a class="J_menuItem" href="/aihudongUser-web/index/toUpload">
+				                   		<i class="fa fa-columns"></i> 
+				                   		<span class="nav-label">安装包上传</span>
+				                   </a>
 				                </li>
 	                       </c:if>
 	                       <c:if test="${user.role==1 }">

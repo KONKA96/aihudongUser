@@ -7,10 +7,12 @@ import javax.servlet.http.HttpSession;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.model.Logger;
 import com.model.User;
 
 public class HandlerInterceptor1 implements HandlerInterceptor{
 
+	protected Logger logger = Logger.getLogger(this.getClass());
 	
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
@@ -34,7 +36,7 @@ public class HandlerInterceptor1 implements HandlerInterceptor{
 		if(user!=null){
 			return true;
 		}
-		System.out.println("请先登录");
+		logger.info("用户未登录!");
 		/*request.getRequestDispatcher("login.jsp").forward(request, response);*/
 		response.sendRedirect("/aihudongUser-web/index/test");
 		return false;

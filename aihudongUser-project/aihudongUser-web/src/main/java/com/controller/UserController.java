@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.model.Logger;
 import com.model.User;
 import com.service.UserService;
 import com.util.JsonUtils;
@@ -32,6 +33,8 @@ import net.sf.json.util.JSONUtils;
 @RequestMapping("/user")
 public class UserController {
 
+	protected Logger logger = Logger.getLogger(this.getClass());
+	
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -63,21 +66,25 @@ public class UserController {
 		Map<String,Object> map=new HashMap<>();
 		if(user.getTruename()!=null) {
 			map.put("truename", user.getTruename());
+			logger.info(adminUser.getUsername()+"模糊搜索:"+user.getTruename());
 		}
 		if(adminUser.getRole()==1) {
 			map.put("adminId", adminUser.getId());
+			logger.info(adminUser.getUsername()+"用户查询所有子用户");
 		}else if(adminUser.getRole()==0) {
 			map.put("role", 1);
+			logger.info(adminUser.getUsername()+"管理员查询所有用户");
 		}
 		
 		Page<User> userList = (Page<User>) userService.selectAllUser(map);
 		pageUtil.setPageInfo(userList, index, pageSize,request);
 		modelMap.put("userList",userList);
+		logger.info("userList"+userList);
 		return "/user/list-user";
 	}
 	
 	/**
-	 * 跳转到更新页面
+	 * 跳转到新增页面
 	 * @param user
 	 * @param modelMap
 	 * @return
@@ -88,7 +95,7 @@ public class UserController {
 	}
 	
 	/**
-	 * 跳转到更新页面
+	 * 跳转到用户编辑页面
 	 * @param user
 	 * @param modelMap
 	 * @return
@@ -104,6 +111,12 @@ public class UserController {
 		return "/user/edit-user";
 	}
 	
+	/**
+	 * 产生相应数量的用户信息，最后存放在session中
+	 * @param number
+	 * @param session
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value="/produceUsers",produces="text/json;charset=UTF-8")
 	public String produceUsers(String number,HttpSession session) {
@@ -164,6 +177,11 @@ public class UserController {
 		return "error";
 	}
 	
+	/**
+	 * 批量新增用户，用户信息由produceUsers方法产生，存放在session内
+	 * @param session
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping("/insertUsers")
 	public String insertUsers(HttpSession session) {
@@ -186,6 +204,8 @@ public class UserController {
 			}
 		}
 		if(count==userList.size()) {
+			session.removeAttribute("userList");
+			logger.info(((User)(session.getAttribute("user"))).getUsername()+"新增"+count+"位子用户");
 			return "success";
 		}
 		return "";
@@ -211,6 +231,7 @@ public class UserController {
 				if(user.getId().equals(adminUser.getId())) {
 					session.setAttribute("user", user);
 				}
+				logger.info(adminUser.getUsername()+"成功修改了"+user.getUsername()+"的信息");
 				return "success";
 			}
 		}else {
@@ -228,6 +249,7 @@ public class UserController {
 			user.setRole(2);
 			user.setAdminId(adminUser.getId());
 			if(userService.insertSelective(user)>0) {
+				logger.info(adminUser.getUsername()+"新增了一条用户信息");
 				return "success";
 			}
 		}
@@ -244,6 +266,7 @@ public class UserController {
 		User loginUser=(User) session.getAttribute("user");
 		//如果是管理员删除用户，需要删除用户下所有的子用户
 		if(loginUser.getRole()==0) {
+			logger.info(loginUser.getUsername()+"删除了"+user.getUsername()+"用户下的所有子用户");
 			HashMap<String,Object> map=new HashMap<>();
 			map.put("adminId", user.getId());
 			List<User> selectAllUser = userService.selectAllUser(map);
@@ -251,6 +274,7 @@ public class UserController {
 				userService.deleteByPrimaryKey(user2);
 			}
 		}
+		logger.info(loginUser.getUsername()+"删除了"+user.getId());
 		//删除该用户
 		if(userService.deleteByPrimaryKey(user)>0){
 			return "success";
@@ -266,13 +290,16 @@ public class UserController {
 	 */
 	@ResponseBody
 	@RequestMapping("/addScreenNum")
-	public String addScreenNum(@RequestParam String id,@RequestParam String num) {
+	public String addScreenNum(@RequestParam String id,@RequestParam String num,HttpSession session) {
 		Map<String,Object> map=new HashMap<>();
 		map.put("id", id);
 		List<User> userList = userService.selectAllUser(map);
 		User user=userList.get(0);
 		user.setScreenNum(Integer.parseInt(num));
+		
+		User userLogin=(User) session.getAttribute("user");
 		if(userService.updateByPrimaryKeySelective(user)>0) {
+			logger.info(userLogin.getUsername()+"给"+user.getUsername()+"分配的屏幕数量为:"+num);
 			return "success";
 		}
 		return "error";

@@ -33,12 +33,14 @@
 							<form method="post" id="searchForm"
 								action="/aihudongUser-web/screen/selectAllScreen">
 								<div class="row">
-									<div class="col-sm-2">
-										<div class="dataTables_length">
-											<a href="/aihudongUser-web/screen/toUpdateScreen"
-												class="btn btn-primary ">新增屏幕</a>
+									<c:if test="${sessionScope.user.role==1 }">
+										<div class="col-sm-2">
+											<div class="dataTables_length">
+												<a href="/aihudongUser-web/screen/toUpdateScreen"
+													class="btn btn-primary ">新增屏幕</a>
+											</div>
 										</div>
-									</div>
+									</c:if>
 									<div class="col-sm-10">
 
 										<div class="input-group" style="float: right;">
@@ -76,6 +78,7 @@
 										<th>屏幕分配者</th>
 										<th>使用总时长</th>
 										<th>使用总人次</th>
+										<th>屏幕类型</th>
 										<th>操作</th>
 									</tr>
 								</thead>
@@ -87,6 +90,13 @@
 											<td>${screen.user.username }</td>
 											<td>${screen.duration }</td>
 											<td>${screen.times }</td>
+											<td>
+												<c:if test="${screen.type==1 }">触摸屏</c:if>
+												<c:if test="${screen.type==2 }">文档屏</c:if>
+												<c:if test="${screen.type==3 }">投影</c:if>
+												<c:if test="${screen.type==4 }">电视</c:if>
+												<c:if test="${screen.type==5 }">临时屏幕</c:if>
+											</td>
 												<td><a
 													href="/aihudongUser-web/screen/toUpdateScreen?id=${screen.id }"><i
 														style="margin-left: 5px;" class="fa fa-edit"></i></a> <a

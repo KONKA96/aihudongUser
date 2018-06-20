@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.disk.DiskFileItem;
+/*import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;*/
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.jcraft.jsch.JSchException;
+import com.model.Logger;
 import com.model.User;
 import com.model.Version;
 import com.service.UserService;
@@ -38,6 +42,8 @@ import sun.misc.BASE64Encoder;
 @Controller
 @RequestMapping("/index")
 public class IndexController {
+	
+	protected Logger logger = Logger.getLogger(this.getClass());  
 	
 	@Autowired
 	private UserService userService;
@@ -75,11 +81,14 @@ public class IndexController {
 			}
 		}
 		if(userList.size()==0) {
+			logger.info(user.getUsername()+"用户名不存在");
 			return "none";
 		}else if(!userList.get(0).getPassword().equals(user.getPassword())) {
+			logger.info(user.getUsername()+"用户名密码不匹配");
 			return "pwdError";
 		}else {
 			session.setAttribute("user", userList.get(0));
+			logger.info(user.getUsername()+"用户登录");
 			return "success";
 		}
 	}
@@ -99,11 +108,13 @@ public class IndexController {
 		List<User> userList = userService.selectAllUser(map);
 		//判断是否存在该电话
 		if(userList.size()==0) {
+			logger.info(user.getTelephone()+"该用户不存在");
 			return "none";
 		}
 		//设置要更新的用户id
 		user.setId(userList.get(0).getId());
 		if(userService.updateByPrimaryKeySelective(user)>0) {
+			logger.info(user.getUsername()+"重置密码成功");
 			return "success";
 		}
 		return "";
@@ -116,6 +127,8 @@ public class IndexController {
      */
 	@RequestMapping("/userLogout")
 	public String userLogout(HttpSession session) {
+		User user=(User) session.getAttribute("user");
+		logger.info(user.getUsername()+"登出");
 		session.invalidate();
     	return "login";
 	}

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.model.Logger;
 import com.model.Room;
 import com.model.Screen;
 import com.model.User;
@@ -36,6 +37,8 @@ import net.sf.json.JSONObject;
 @Controller
 @RequestMapping("/screen")
 public class ScreenController {
+	
+	protected Logger logger = Logger.getLogger(this.getClass());
 
 	@Autowired
 	private ScreenService screenService;
@@ -62,11 +65,14 @@ public class ScreenController {
 		PageHelper.startPage(index, pageSize);
     	
     	HttpSession session = request.getSession();
+    	User user=(User) session.getAttribute("user");
+    	
     	Map<String,Object> map=new HashMap<>();
     	if(screen.getDuration()!=null) {
 			map.put("duration", screen.getDuration());
+			logger.info(user.getUsername()+"模糊搜索屏幕:"+screen.getDuration());
 		}
-    	User user=(User) session.getAttribute("user");
+    	
     	if(user.getRole()==1) {
     		map.put("userId", user.getId());
     	}
@@ -74,6 +80,7 @@ public class ScreenController {
     	Page<Screen> screenList = (Page<Screen>) screenService.selectAllScreen(map);
     	pageUtil.setPageInfo(screenList, index, pageSize,request);
 		modelMap.put("screenList", screenList);
+		logger.info(user.getUsername()+"搜索屏幕:"+screenList);
 		
 		return "/screen/list-screen";
 	}
@@ -128,12 +135,12 @@ public class ScreenController {
     	List<Screen> screenList = screenService.selectAllScreen(map);
     	//查询该用户的剩余屏幕
     	user.setScreenRemain(user.getScreenNum()-screenList.size());
-    	if(user.getScreenRemain()<Integer.parseInt(number)) {
+    	if(user.getScreenNum()<Integer.parseInt(number)) {
     		jsonObject.put("min", "min");
     		return jsonObject.toString();
     	}
     	
-    	
+    	room.setUserId(user.getId());
     	Room roomN=roomService.selectScreenByRoom(room);
     	List<Screen> screenListOld=new ArrayList<>();
     	//房间不存在，则新建房间
@@ -187,14 +194,21 @@ public class ScreenController {
      */
     @ResponseBody
     @RequestMapping("/insertScreen")
-    public String insertScreen(HttpSession session,User user,@RequestParam String roomId){
-    	Room roomScreen=new Room();
-    	roomScreen.setId(roomId);
-    	String register = register(user, session);
-    	if(!register.equals("success")) {
-    		return register;
+    public String insertScreen(HttpSession session,User user,@RequestParam(required=false) String roomId,Room roomScreen){
+    	if(roomId!=null) {
+    		roomScreen.setId(roomId);
+    	}
+    	//用户注册
+    	if(user.getUsername()!=null) {
+    		String register = register(user, session);
+    		if(!register.equals("success")) {
+        		return register;
+        	}
+    	}else {
+    		user=(User) session.getAttribute("user");
     	}
     	
+    	//新建房间
     	Room room=(Room) session.getAttribute("room");
     	if(room!=null) {
     		if(roomScreen.getId().contains(",")) {
@@ -203,6 +217,7 @@ public class ScreenController {
     		room.setId(roomScreen.getId());
     		roomService.insertSelective(room);
     		session.removeAttribute("room");
+    		logger.info(user.getUsername()+"成功开通了"+room.getNum());
     	}
     	List<Screen> screenList=roomScreen.getScreenList();
 //    	添加和修改的总记录
@@ -249,6 +264,8 @@ public class ScreenController {
 	        		}
 	    		}
 			}
+	    	logger.info(user.getUsername()+"成功开通"+i+"个屏幕");
+        	return "success";
     	}else {
     		roomScreen.setNum("房间1");
     		roomService.insertSelective(roomScreen);
@@ -284,9 +301,9 @@ public class ScreenController {
         			insert++;
         		}
         	}
+        	logger.info(user.getUsername()+"成功开通"+i+"个屏幕");
         	return "success";
     	}
-    	return "";
     }
     /**
 	 * 用户注册
@@ -300,6 +317,7 @@ public class ScreenController {
 			map.put("username",user.getUsername());
 			List<User> userList = userService.selectAllUser(map);
 			if(userList.size()!=0) {
+				logger.info(user.getUsername()+"用户已经存在，注册失败");
 				return "exist";
 			}
 		}
@@ -309,6 +327,7 @@ public class ScreenController {
 			map.remove("username");
 			List<User> userList = userService.selectAllUser(map);
 			if(userList.size()!=0) {
+				logger.info(user.getTelephone()+"用户已经存在，注册失败");
 				return "phoneexist";
 			}
 		}
@@ -317,6 +336,7 @@ public class ScreenController {
 		user.setId(newId);
 		user.setRole(1);
 		if(userService.insertSelective(user)>0) {
+			logger.info(user.getUsername()+"用户注册成功");
 			return "success";
 		}
 		return "error";
@@ -329,6 +349,7 @@ public class ScreenController {
     	
     	room.setNum("房间1");
     	roomService.insertSelective(room);
+    	logger.info(user.getUsername()+"成功开通了"+room.getNum()+"房间");
     	
     	int count=0;
     	for(int j=0;j<2;j++) {
@@ -363,6 +384,7 @@ public class ScreenController {
         	}
     	}
     	if(count==2) {
+    		logger.info(user.getUsername()+"成功开通了"+count+"个屏幕");
     		return "success";
     	}
     	
@@ -375,20 +397,25 @@ public class ScreenController {
      */
     @ResponseBody
     @RequestMapping("/updateScreen")
-    public String updateScreen(Screen screen){
+    public String updateScreen(Screen screen,HttpSession session){
+    	User user=(User) session.getAttribute("user");
+    	
     	if(screen.getId()!=null){
     		List<Screen> screenList = screenService.selectAllScreen(null);
     		for (Screen sc : screenList) {
 //    			用户名相同且id不同，则认为用户名重复
 				if(sc.getUsername().equals(screen.getUsername()) && !sc.getId().equals(screen.getId())){
+					logger.info(user.getUsername()+"修改屏幕失败，屏幕已经存在");
 					return "same";
 				}
 			}
     		if(screenService.updateByPrimaryKeySelective(screen)>0){
+    			logger.info(user.getUsername()+"修改"+screen.getUsername()+"屏幕成功");
     			return "success";
     		}
     	}else{
     		if(screenService.insertSelective(screen)>0){
+    			logger.info(user.getUsername()+"添加屏幕成功");
     			return "success";
     		}
     	}
@@ -403,7 +430,9 @@ public class ScreenController {
     @ResponseBody
     @RequestMapping("/deleteScreen")
     public String deleteScreen(Screen screen,HttpSession session){
+    	User user=(User) session.getAttribute("user");
     	if(screenService.deleteByPrimaryKey(screen)>0){
+    		logger.info(user.getUsername()+"删除了"+screen.getId()+"屏幕");
     		return "success";
     	}
     	return "";
@@ -468,6 +497,7 @@ public class ScreenController {
         // 创建ExportExcel对象
         ExportExcel ex = new ExportExcel(title, rowsName, dataList);
 
+        logger.info(user.getUsername()+"导出了excel表格");
         // 输出Excel文件
         try {
             OutputStream output = response.getOutputStream();

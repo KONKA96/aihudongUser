@@ -90,7 +90,7 @@
   <select id="selectScreenByRoom" parameterType="Room" resultMap="roomMap">
   	select
   		r.id r_id, r.num, r.position, r.desc,
-  		s.id s_id, s.username, s.password, s.room_id, s.duration, s.times, s.type, s.resolution
+  		s.id s_id, s.username, s.password, s.room_id, s.user_id, s.duration, s.times, s.type, s.resolution
   	from room r left join screen s on r.id=s.room_id
   	<where>
   		<if test="id!=null">
@@ -98,6 +98,9 @@
   		</if>
   		<if test="num!=null">
   			and r.num=#{num}
+  		</if>
+  		<if test="userId!=null">
+  			and s.user_id=#{userId}
   		</if>
   	</where>
   </select>

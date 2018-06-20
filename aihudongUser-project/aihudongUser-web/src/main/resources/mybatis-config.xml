@@ -7,7 +7,7 @@
 	  	<!-- 使用驼峰命名进行自动映射 -->
 	  	<setting name="mapUnderscoreToCamelCase" value="true"/>
 	  	<!-- 输入sql语句 -->
-	  	<setting name="logImpl" value="STDOUT_LOGGING"/>
+	  	<!-- <setting name="logImpl" value="STDOUT_LOGGING"/> -->
 	  	<!-- 开启懒加载配置 -->
 	  	<!-- 全局性设置懒加载。如果设为‘false'，则所有相关联的都会被初始化加载。 -->
 	    <setting name="lazyLoadingEnabled" value="true"/>

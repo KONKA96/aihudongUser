@@ -11,6 +11,8 @@ public class Room {
 
     private String desc;
     
+    private String userId;
+    
     private List<Screen> screenList;
     
     public List<Screen> getScreenList() {
@@ -19,6 +21,15 @@ public class Room {
 
 	public void setScreenList(List<Screen> screenList) {
 		this.screenList = screenList;
+	}
+	
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getId() {

@@ -9,7 +9,6 @@
 <!-- 全局js -->
 <script src="<%=basePath%>resources/js/login-register.js" type="text/javascript"></script>
 
-<script src="<%=basePath%>resources/js/laydate.js"></script>
 <script src="<%=basePath%>resources/js/jquery.min.js?v=2.1.4"></script>
 <script src="<%=basePath%>resources/js/postAjax.js"></script>
 <script src="<%=basePath%>resources/js/bootstrap.min.js?v=3.3.6"></script>
@@ -33,5 +32,3 @@
 <script src="<%=basePath%>resources/js/plugins/sweetalert/sweetalert.min.js"></script>
 <script src="<%=basePath%>resources/js/plugins/iCheck/icheck.min.js"></script>
 <script src="<%=basePath%>resources/js/plugins/datapicker/bootstrap-datepicker.js"></script>
-<!-- 引入图表 -->
-<script src="<%=basePath%>resources/js/echarts.min.js"></script>
