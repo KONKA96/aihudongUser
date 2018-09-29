@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -194,10 +195,8 @@ public class ScreenController {
      */
     @ResponseBody
     @RequestMapping("/insertScreen")
-    public String insertScreen(HttpSession session,User user,@RequestParam(required=false) String roomId,Room roomScreen){
-    	if(roomId!=null) {
-    		roomScreen.setId(roomId);
-    	}
+    public String insertScreen(HttpSession session,User user,Room roomScreen){
+    	roomScreen.setId(UUID.randomUUID().toString());
     	//用户注册
     	if(user.getUsername()!=null) {
     		String register = register(user, session);

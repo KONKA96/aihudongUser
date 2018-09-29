@@ -1,26 +1,26 @@
 package com.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.model.Err;
 import com.model.Record;
 import com.model.Room;
 import com.model.Screen;
@@ -32,8 +32,6 @@ import com.service.UserService;
 import com.util.JsonUtils;
 
 import net.sf.json.JSONObject;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 @Controller
 @RequestMapping("/front")
@@ -50,110 +48,156 @@ public class QianduanController {
 	
 	/**
 	 * 用户登录
-	 * @param string
+	 * @author KONKA
+	 * @param username 用户名
+	 * @param password 密码
 	 * @param response
 	 * @param request
+	 * @param modelMap
+	 * @return
 	 * @throws IOException
 	 */
-	@RequestMapping(value="/userLogin", produces="text/plain")
-	public void UserLogin(@RequestBody String string,
-			HttpServletResponse response,HttpServletRequest request) throws IOException{
+	@ResponseBody
+	@RequestMapping(value = { "/userLogin" }, produces = { "text/json;charset=UTF-8" })
+	public String UserLogin(@RequestParam(required = false) String username,
+			@RequestParam(required = false) String password, @RequestParam(required = false) String sid,
+			@RequestParam(required = false) String serverhost, @RequestParam(required = false) String openid,
+			HttpServletResponse response, HttpServletRequest request, ModelMap modelMap) throws IOException {
 		response.setCharacterEncoding("utf-8");
+		response.setHeader("Access-Control-Allow-Origin", "*");
 		ServletContext servletContext = request.getServletContext();
-//		base64转码
-		BASE64Encoder encoder = new BASE64Encoder();
-//		base64解码
-		BASE64Decoder decoder = new BASE64Decoder();
-		string=new String(decoder.decodeBuffer(string), "UTF-8");
-		JSONObject fromObject = JSONObject.fromObject(string);
-		
-		String username =fromObject.getString("username");
-		String password=fromObject.getString("password");
-		String device=fromObject.getString("device");
-		
-		Set<Entry<String, String>> entrySet = new HashSet<>();
-		for (Entry<String, String> entry : entrySet) {
-			if(entry.getKey().equals("username")){
-				username=entry.getValue();
-			}
-			if(entry.getKey().equals("password")){
-				password=entry.getValue();
-			}
-			if(entry.getKey().equals("device")){
-				device=entry.getValue();
-			}
-		}
 		HttpSession session = request.getSession();
+		//返回参数集合
+		Map<String, Object> argMap = new HashMap<>();
+
+		argMap.put("username", username);
 		
-		Map<String,Object> map=new HashMap<>();
-		map.put("username",username);
-		List<User> userList = userService.selectAllUser(map);
-		List<Screen> screenList = screenService.selectAllScreen(map);
+		Screen screen = new Screen();
+		User user = new User();
 		
-		PrintWriter writer=null;
-		try {
-			writer = response.getWriter();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		List<Screen> selectAllScreen = new ArrayList<>();
+		List<User> selectAllUser = null;
+		//查询参数集合
+		Map<String,Object> map = new HashMap<>();
+		if (username != null) {
+			modelMap.put("username", username);
+			
+			
+			map.put("username", username);
+			selectAllUser = userService.selectAllUser(map);
+
+			screen.setUsername(username);
+
+			selectAllScreen = screenService.selectAllScreen(map);
+			
+		}else if (sid != null) {
+			map.put("sid", sid);
+			selectAllScreen = screenService.selectAllScreen(map);
+			if(selectAllScreen.size()>1) {
+				argMap.put("code", Integer.valueOf(1004));
+				argMap.put("message", "该机器绑定多个屏幕，请联系管理员!");
+				return JsonUtils.objectToJson(argMap);
+			}
 		}
 		
-//		转码后的字符串，最后要写入到流中的数据
-		String encode =null;
-//		保存的记录对象
-		Record record=new Record();
-		
-		if(userList.size()!=0) {
-			User user=userList.get(0);
-			if(!user.getPassword().equals(password)) {
-				Err err = new Err(1001,"用户名不存在或密码错误");
-				String errString = JsonUtils.objectToJson(err);
-				String errEncode = encoder.encode(errString.getBytes());
-				writer.write(errEncode);
-			}else {
-				session.setAttribute("user", user);
-				servletContext.setAttribute(user.getUsername(), session);
-				
-				String sessionId = session.getId();
-				user.setSessionId(sessionId);
-				
-				String jsonTeacher = JsonUtils.objectToJson(user);
-				encode = encoder.encode(jsonTeacher.getBytes());
-				
-				record.setUserId(user.getId());
-				record.setRole(user.getRole());
+		else {
+			argMap.put("code", Integer.valueOf(1002));
+			argMap.put("message", "用户名为空");
+			return JsonUtils.objectToJson(argMap);
+		}
+		Record record = new Record();
+		if ((selectAllUser == null) && (selectAllScreen.size() == 0)) {
+			argMap.put("code", Integer.valueOf(1001));
+			argMap.put("message", "用户不存在");
+			return JsonUtils.objectToJson(argMap);
+		}
+		if (selectAllUser.size() != 0) {
+			user = selectAllUser.get(0);
+			
+			if (!user.getPassword().equals(password)) {
+				argMap.put("code", Integer.valueOf(1002));
+				argMap.put("message", "密码错误");
+				return JsonUtils.objectToJson(argMap);
 			}
-		}else if(screenList.size()!=0) {
-			Screen screen = screenList.get(0);
+			
+			session.setAttribute("user", user);
+
+			servletContext.setAttribute(user.getUsername(), session);
+			String sessionId = session.getId();
+			user.setSessionId(sessionId);
+
+			record.setUserId(user.getId());
+			record.setRole(user.getRole());
+			argMap.put("role", user.getRole());
+			/* 微信登录
+			 * if (openid != null && openid != "") {
+				user.setOpenId(openid);
+				user.setPassword(null);
+				this.teacherService.updateTeacherSelected(teacher);
+			}*/
+			
+			//统计在线人数
+			/*Object tcount = servletContext.getAttribute("tcount");
+			if(tcount==null) {
+				servletContext.setAttribute("tcount", 1);
+			}else {
+				servletContext.setAttribute("tcount", tcount.toString()+1);
+			}*/
+		} else if (selectAllScreen.size() != 0) {
+			if (password != null && !((Screen) selectAllScreen.get(0)).getPassword()
+					.equals(password)) {
+				argMap.put("code", Integer.valueOf(1002));
+				argMap.put("message", "密码错误");
+				return JsonUtils.objectToJson(argMap);
+			}
+			
+
+			argMap.put("username", selectAllScreen.get(0).getUsername());
+			
+			screen = (Screen) selectAllScreen.get(0);
 			session.setAttribute("screen", screen);
-			servletContext.setAttribute(screen.getUsername(), session);
+			/* 屏幕随机数
+			 * String stringRandom = StringRandom.getStringRandom(3);
+
+			servletContext.setAttribute(screen.getUsername(), stringRandom);
+			servletContext.setAttribute(stringRandom, session);
+			screen.setRandomname(stringRandom);
+			*/
 
 			screen.setRole(4);
-
 			String sessionId = session.getId();
 			screen.setSessionId(sessionId);
-			String jsonScreen = JsonUtils.objectToJson(screen);
-			encode = encoder.encode(jsonScreen.getBytes());
+			
 
 			record.setUserId(screen.getId());
-			record.setRole(4);
+			record.setRole(Integer.valueOf(4));
+			screen = (Screen) selectAllScreen.get(0);
+			Room room = roomService.selectScreenByRoom(screen.getRoom());
+			argMap.put("role", Integer.valueOf(4));
+			argMap.put("meetingName", room.getNum());
+			
+			if ((selectAllScreen.size() != 0) && (((Screen) selectAllScreen.get(0)).getSid() == null) && (sid != null)) {
+				selectAllScreen.get(0).setSid(sid);
+				selectAllScreen.get(0).setPassword(null);
+				screenService.updateByPrimaryKeySelective(selectAllScreen.get(0));
+			}
 		}
-		
-		
-//		将用户信息传到前端
-		if(encode!=null){
-			writer.write(encode);
-			session.setAttribute("startTime", new Date());
-//			新建记录对象，新增的数据库中，还缺少登出时间和连接的屏幕id
-			record.setStartTime(new Date());
-			recordService.insertSelective(record);
-//			将该条记录的id记录在session中，方便后面更改该条记录
-			session.setAttribute("recordId", record.getId());
-			session.setAttribute("startTime", record.getStartTime());
-			session.setAttribute("role", record.getRole());
-			session.setAttribute("userId", record.getUserId());
-		}
-		writer.close();
+		session.setMaxInactiveInterval(-1);
+		session.setAttribute("count", Integer.valueOf(0));
+
+		session.setAttribute("startTime", new Date());
+
+		record.setStartTime(new Date());
+		this.recordService.insertSelective(record);
+
+		session.setAttribute("recordId", record.getId());
+		session.setAttribute("startTime", record.getStartTime());
+		session.setAttribute("role", record.getRole());
+		session.setAttribute("userId", record.getUserId());
+		argMap.put("code", Integer.valueOf(200));
+		argMap.put("serverhost", serverhost);
+
+		return JsonUtils.objectToJson(argMap);
 	}
 	
 	/**
@@ -163,138 +207,147 @@ public class QianduanController {
 	 * @param request
 	 * @throws IOException
 	 */
+	@ResponseBody
 	@RequestMapping("/userLogout")
-	public void userLogout(@RequestBody String string,HttpServletResponse response,HttpServletRequest request) throws IOException{
+	public String userLogout(@RequestParam(required = false) String username,HttpServletResponse response,HttpServletRequest request) throws IOException{
 		ServletContext servletContext = request.getServletContext();
+		response.setCharacterEncoding("utf-8");
+		response.setHeader("Access-Control-Allow-Origin", "*");
 		
-//		base64解码
-		BASE64Decoder decoder = new BASE64Decoder();
-		
-		string=new String(decoder.decodeBuffer(string), "UTF-8");
-		JSONObject fromObject = JSONObject.fromObject(string);
-		String username=fromObject.getString("username");
-		String sessionId=fromObject.getString("sessionId");
-		HttpSession session=(HttpSession) servletContext.getAttribute(username);
-		if(session.getId().equals(sessionId)){
-//			更新记录表内登出的时间
-			int id= (int) session.getAttribute("recordId");
-			Record record=new Record();
-			record.setId(id);
-			record.setEndTime(new Date());
-			Date startTime=(Date) session.getAttribute("startTime");
-//			计算使用的时长
-			long second=(record.getEndTime().getTime()-startTime.getTime())/1000;
-//			转化为小时、分钟、秒
-			int hour=(int) (second/(60*60));
-			int minute=(int) ((second%(60*60))/60);
-			int sec=(int) (second%60);
-			
-			int role=(int) session.getAttribute("role");
-			String userId=(String) session.getAttribute("userId");
-			if(role==1 || role==2){
-				User user=new User();
-				user.setId(userId);
-				user=userService.selectByPrimaryKey(user);
-//				更新教师使用时长，通过':'分割字符串，分别计算秒、分钟、小时
-				String duration = user.getDuration();
-				
-				user.setTimes(user.getTimes()+1);
-				user.setDuration(countTime(duration,hour,minute,sec));
-				userService.updateByPrimaryKeySelective(user);
-			}else if(role==4){
-				Screen screen=new Screen();
-				screen.setId(userId);
-				screen=screenService.selectByPrimaryKey(screen);
-				int number=screen.getTimes();
-				String duration = screen.getDuration();
-				
-				screen.setTimes(number+1);
-				screen.setDuration(countTime(duration,hour,minute,sec));
-				screenService.updateByPrimaryKeySelective(screen);
-			}
-			recordService.updateByPrimaryKeySelective(record);
-//			清除session
-			session.invalidate();
-			servletContext.removeAttribute(username);
+		Map<String, Object> argMap = new HashMap<>();
+		/*
+		 * Screen screen=new Screen(); screen.setUsername(username); List<Screen>
+		 * selectAllScreen = screenService.selectAllScreen(screen);
+		 */
+		HttpSession session = null;
+		String randomname = null;
+		session = (HttpSession) servletContext.getAttribute(username);
+		/*
+		 * if(selectAllScreen.size()==0) {
+		 * 
+		 * }else { randomname = (String) servletContext.getAttribute(username); session
+		 * = (HttpSession) servletContext.getAttribute(randomname); }
+		 */
+
+		// 更新记录表内登出的时间
+		int id = (int) session.getAttribute("recordId");
+		Record record = new Record();
+		record.setId(id);
+		record.setEndTime(new Date());
+		Date startTime = (Date) session.getAttribute("startTime");
+		// 计算使用的时长
+		long second = (record.getEndTime().getTime() - startTime.getTime()) / 1000;
+		// 转化为小时、分钟、秒
+		int hour = (int) (second / (60 * 60));
+		int minute = (int) ((second % (60 * 60)) / 60);
+		int sec = (int) (second % 60);
+
+		int role = (int) session.getAttribute("role");
+		String userId = (String) session.getAttribute("userId");
+		if (role == 1 || role == 2) {
+			userLogout(userId, hour, minute, sec, servletContext);
+		} else if (role == 4) {
+			screenLogout(userId, hour, minute, sec);
 		}
+		recordService.updateByPrimaryKeySelective(record);
+		
+		servletContext.removeAttribute(username);
+		// 清除session
+		argMap.put("code", Integer.valueOf(200));
+		
+		return JsonUtils.objectToJson(argMap);
+	}
+	
+	public void userLogout(String userId, int hour, int minute, int sec, ServletContext servletContext) {
+		User user = new User();
+		user.setId(userId);
+		user = userService.selectByPrimaryKey(user);
+		// 更新教师使用时长，通过':'分割字符串，分别计算秒、分钟、小时
+		String duration = user.getDuration();
+
+		user.setTimes(user.getTimes() + 1);
+		user.setDuration(countTime(duration, hour, minute, sec));
+		//统计在线人数
+		userService.updateByPrimaryKeySelective(user);
+	}
+
+	public void screenLogout(String userId, int hour, int minute, int sec) {
+		Screen screen = new Screen();
+		screen.setId(userId);
+		screen = screenService.selectByPrimaryKey(screen);
+		int number = screen.getTimes();
+		String duration = screen.getDuration();
+
+		screen.setTimes(number + 1);
+		screen.setDuration(countTime(duration, hour, minute, sec));
+		screenService.updateByPrimaryKeySelective(screen);
 	}
 	
 	/**
 	 * 用户与屏幕连接
+	 * @author KONKA
 	 * @param string
 	 * @param response
 	 * @param request
 	 * @throws IOException
 	 */
-	@RequestMapping("/connectToScreen")
-	public void connectToScreen(@RequestBody String string,HttpServletResponse response,HttpServletRequest request) throws IOException{
-		ServletContext servletContext = request.getServletContext();
-//		base64转码
-		BASE64Encoder encoder = new BASE64Encoder();
-//		base64解码
-		BASE64Decoder decoder = new BASE64Decoder();
-		string=new String(decoder.decodeBuffer(string), "UTF-8");
-		JSONObject fromObject = JSONObject.fromObject(string);
-		String usernameUser =fromObject.getString("usernameUser");
-		int role=fromObject.getInt("role");
-		String sessionId=fromObject.getString("sessionId");
-		String usernameScreen =fromObject.getString("usernameScreen");
-		String password =fromObject.getString("password");
-		HttpSession session=(HttpSession) servletContext.getAttribute(usernameUser);
-		PrintWriter writer = response.getWriter();
-		String encode =null;
-//		如果session中没有用户，则session失效，报1002
-		if(session==null){
-			Err err = new Err(1002,"会话过期");
-			String errString = JsonUtils.objectToJson(err);
-			encode = encoder.encode(errString.getBytes());
-			writer.write(encode);
-		}else{
-//			通过用户名密码查询屏幕
-			Map<String,Object> map=new HashMap<>();
-			map.put("username", usernameScreen);
-			List<Screen> selectAllScreen = screenService.selectAllScreen(map);
-//			如果没有查到，报1001
-			if(selectAllScreen.size()<=0){
-				Err err = new Err(1003,"屏幕不存在!");
-				String errString = JsonUtils.objectToJson(err);
-				encode = encoder.encode(errString.getBytes());
-				writer.write(encode);
-			}else{
-				Map<String,Object> mapUser=new HashMap<>();
-				mapUser.put("username", usernameUser);
-				List<User> userList = userService.selectAllUser(mapUser);
-				User user=userList.get(0);
-				
-				
-				Screen screen = selectAllScreen.get(0);
-				if (!user.getId().equals(screen.getUserId())) {
-					Err err = new Err(1003, "屏幕不存在!");
-					String errString = JsonUtils.objectToJson(err);
-					encode = encoder.encode(errString.getBytes());
-					writer.write(encode);
-				} else {
-					Room room = screen.getRoom();
-					room = roomService.selectScreenByRoom(room);
-					if (room != null) {
-						String jsonRoom = JsonUtils.objectToJson(room);
-						encode = encoder.encode(jsonRoom.getBytes());
-					}
-					if (encode != null) {
-						writer.write(encode);
-					}
+	@ResponseBody
+	@RequestMapping(value = { "/connectToScreen" }, produces = { "text/json;charset=UTF-8" })
+	public String connectToScreen(@RequestParam String usernameUser, @RequestParam String usernameScreen,
+			@RequestParam String role, @RequestParam(required = false) String serverhost, HttpServletResponse response,
+			HttpServletRequest request, ModelMap modelMap) throws Exception {
+		response.setHeader("Access-Control-Allow-Origin", "*");
 
-					// 更新记录中连接的屏幕ID
-					int id = (int) session.getAttribute("recordId");
-					Record record = new Record();
-					record.setId(id);
-					record.setScreenId(screen.getId());
-					recordService.updateByPrimaryKeySelective(record);
-				}
-			}
+		Map<String, Object> argMap = new HashMap<>();
+
+		ServletContext servletContext = request.getServletContext();
+		HttpSession session = (HttpSession) servletContext.getAttribute(usernameUser);
+		if (session == null) {
+			argMap.put("code", Integer.valueOf(1002));
+			argMap.put("message", "session失效");
+			return JsonUtils.objectToJson(argMap);
 		}
-//		
-		writer.close();
+		User user = (User) session.getAttribute("user");
+		//查询参数集合
+		Map<String,Object> map = new HashMap<>();
+		Screen screen = new Screen();
+		map.put("username", usernameScreen);
+		//screen.setUsername(usernameScreen);
+		List<Screen> selectAllScreen = screenService.selectAllScreen(map);
+		if (selectAllScreen.size() <= 0) {
+			argMap.put("code", Integer.valueOf(1003));
+			argMap.put("message", "屏幕不存在");
+			return JsonUtils.objectToJson(argMap);
+		}else if(!selectAllScreen.get(0).getUserId().equals(user.getId())) {
+			argMap.put("code", Integer.valueOf(1004));
+			argMap.put("message", "屏幕不属于该用户");
+			return JsonUtils.objectToJson(argMap);
+		}
+		screen = (Screen) selectAllScreen.get(0);
+		Room room = this.roomService.selectScreenByRoom(screen.getRoom());
+		List<Screen> screenList = room.getScreenList();
+		/* 屏幕随机数
+		 * for (Screen scr : screenList) {
+			if (!scr.getUsername().equals(usernameScreen)) {
+				scr.setRandomname(StringRandom.getStringRandom(3));
+			}
+		}*/
+		int id = ((Integer) session.getAttribute("recordId")).intValue();
+		Record record = new Record();
+		record.setId(Integer.valueOf(id));
+		record.setScreenId(screen.getId());
+		this.recordService.updateByPrimaryKeySelective(record);
+
+		argMap.put("usernameUser", usernameUser);
+		if (session.getAttribute("screen") != null) {
+			argMap.put("usernameScreen", usernameScreen);
+		}
+		argMap.put("meetingName", room.getNum());
+
+		argMap.put("role", role);
+		argMap.put("serverhost", serverhost);
+		argMap.put("code", Integer.valueOf(200));
+		return JsonUtils.objectToJson(argMap);
 	}
 	
 	@RequestMapping("/breakConnect")

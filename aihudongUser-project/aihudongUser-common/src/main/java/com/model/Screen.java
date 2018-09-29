@@ -6,6 +6,8 @@ public class Screen {
     private String username;
 
     private String password;
+    
+    private String sid;
 
     private String roomId;
     
@@ -27,6 +29,14 @@ public class Screen {
     
     private Room room;
     
+	public String getSid() {
+		return sid;
+	}
+
+	public void setSid(String sid) {
+		this.sid = sid;
+	}
+
 	public User getUser() {
 		return user;
 	}

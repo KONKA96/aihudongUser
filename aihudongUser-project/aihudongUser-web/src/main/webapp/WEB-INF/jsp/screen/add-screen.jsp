@@ -196,63 +196,21 @@
 
 	
 	function updateInfo() {
-		var obj = {};
-	    obj['user_cipher'] = "2f00b5421e66d0b223512f2ead170b86";
-	    obj['title'] = $("#roomInput").val();
-	    obj['encryption'] = 0;
-	    obj['speaker_user_num'] = 13051207626;
-	   /*  
-	    obj['assistant_user_num'] = 13716680030; 
-	    obj['is_shared'] = 0;*/
-	    obj['is_series'] = 0;
-	    obj['start_time'] = 7265145939;
-	    obj['end_time'] = 0;
-	    obj['type_id'] = 1;
-	    if($("#roomId").val() == null
-				|| $("#roomId").val() == ""){
-		    $.ajax({
-				url : "http://a.buka.tv/buka/api/course/create.do",
-				type : "post",
-				contentType: 'application/json', // 这句不加出现415错误:Unsupported Media Type
-		        data: JSON.stringify(obj),
-				success : function(data) {
-					if (data.course_id!=null) {
-						$.ajax({
-							url : "/aihudongUser-web/screen/insertScreen?id="+data.course_id,
-							data : $("#editFormScreen").serialize(),
-							type : "post",
-							success : function(data) {
-								if (data == 'success') {
-									alert("操作成功！");
-									window.location = "/aihudongUser-web/screen/selectAllScreen";
-								} else if (data == "error") {
-									alert("用户名存在重复，前查找后再添加");
-								} else {
-									alert("操作失败");
-								}
-							}
-						})
-					}
+		$.ajax({
+			url : "/aihudongUser-web/screen/insertScreen",
+			data : $("#editFormScreen").serialize(),
+			type : "post",
+			success : function(data) {
+				if (data == 'success') {
+					alert("操作成功！");
+					window.location = "/aihudongUser-web/screen/selectAllScreen";
+				} else if (data == "error") {
+					alert("用户名存在重复，前查找后再添加");
+				} else {
+					alert("操作失败");
 				}
-			})
-	    }else{
-	    	$.ajax({
-				url : "/aihudongUser-web/screen/insertScreen",
-				data : $("#editFormScreen").serialize(),
-				type : "post",
-				success : function(data) {
-					if (data == 'success') {
-						alert("操作成功！");
-						window.location = "/aihudongUser-web/screen/selectAllScreen";
-					} else if (data == "error") {
-						alert("用户名重复!");
-					} else {
-						alert("操作失败");
-					}
-				}
-			})
-	    }
-		
+			}
+		})
 	}
 
 	function goback() {

@@ -5,6 +5,7 @@
     <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="username" property="username" jdbcType="VARCHAR" />
     <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="sid" property="sid" jdbcType="VARCHAR" />
     <result column="room_id" property="roomId" jdbcType="VARCHAR" />
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="duration" property="duration" jdbcType="VARCHAR" />
@@ -13,7 +14,7 @@
     <result column="resolution" property="resolution" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, username, password, room_id, user_id, duration, times, type, resolution
+    id, username, password, sid, room_id, user_id, duration, times, type, resolution
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -27,13 +28,13 @@
   </delete>
   <insert id="insert" parameterType="com.model.Screen" >
     insert into screen (id, username, password, 
-      room_id, user_id, duration, 
-      times, type, resolution
-      )
+      sid, room_id, user_id, 
+      duration, times, type, 
+      resolution)
     values (#{id,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{roomId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{duration,jdbcType=VARCHAR}, 
-      #{times,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{resolution,jdbcType=VARCHAR}
-      )
+      #{sid,jdbcType=VARCHAR}, #{roomId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, 
+      #{duration,jdbcType=VARCHAR}, #{times,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, 
+      #{resolution,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.model.Screen" >
     insert into screen
@@ -46,6 +47,9 @@
       </if>
       <if test="password != null" >
         password,
+      </if>
+      <if test="sid != null" >
+        sid,
       </if>
       <if test="roomId != null" >
         room_id,
@@ -76,6 +80,9 @@
       <if test="password != null" >
         #{password,jdbcType=VARCHAR},
       </if>
+      <if test="sid != null" >
+        #{sid,jdbcType=VARCHAR},
+      </if>
       <if test="roomId != null" >
         #{roomId,jdbcType=VARCHAR},
       </if>
@@ -105,6 +112,9 @@
       <if test="password != null" >
         password = #{password,jdbcType=VARCHAR},
       </if>
+      <if test="sid != null" >
+        sid = #{sid,jdbcType=VARCHAR},
+      </if>
       <if test="roomId != null" >
         room_id = #{roomId,jdbcType=VARCHAR},
       </if>
@@ -130,6 +140,7 @@
     update screen
     set username = #{username,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
+      sid = #{sid,jdbcType=VARCHAR},
       room_id = #{roomId,jdbcType=VARCHAR},
       user_id = #{userId,jdbcType=VARCHAR},
       duration = #{duration,jdbcType=VARCHAR},
@@ -171,6 +182,9 @@
   		<if test="duration!='' and duration!=null">
   			and concat (s.username,r.num,s.id,u.username) like concat ('%',#{duration},'%') 
   		</if>
+  		<if test="sid!=null">
+			and s.sid=#{sid}
+		</if>
   	</where>
   </select>
   
