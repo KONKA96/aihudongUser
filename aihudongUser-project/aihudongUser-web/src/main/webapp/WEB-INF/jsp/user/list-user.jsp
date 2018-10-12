@@ -5,11 +5,11 @@
 <html>
 
 <head>
-
+	<jsp:include page="../common/include_js.jsp" />
+	<jsp:include page="../common/include_css.jsp" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>用户管理</title>
-    <jsp:include page="../common/include_css.jsp" />
 </head>
 
 <body class="gray-bg">
@@ -125,7 +125,7 @@
         </div>
     </div>
 
-    <jsp:include page="../common/include_js.jsp" />
+   
 
 </body>
 <script type="text/javascript">

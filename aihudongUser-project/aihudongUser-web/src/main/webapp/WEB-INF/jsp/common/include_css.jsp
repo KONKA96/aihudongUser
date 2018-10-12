@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"

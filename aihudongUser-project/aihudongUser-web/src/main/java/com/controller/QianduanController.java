@@ -106,12 +106,12 @@ public class QianduanController {
 			return JsonUtils.objectToJson(argMap);
 		}
 		Record record = new Record();
-		if ((selectAllUser == null) && (selectAllScreen.size() == 0)) {
+		if ((selectAllUser == null || selectAllUser.size()==0) && (selectAllScreen.size() == 0)) {
 			argMap.put("code", Integer.valueOf(1001));
 			argMap.put("message", "用户不存在");
 			return JsonUtils.objectToJson(argMap);
 		}
-		if (selectAllUser.size() != 0) {
+		if (selectAllUser != null && selectAllUser.size()!=0) {
 			user = selectAllUser.get(0);
 			
 			if (!user.getPassword().equals(password)) {
@@ -175,6 +175,7 @@ public class QianduanController {
 			Room room = roomService.selectScreenByRoom(screen.getRoom());
 			argMap.put("role", Integer.valueOf(4));
 			argMap.put("meetingName", room.getNum());
+			argMap.put("meetingId", room.getId());
 			
 			if ((selectAllScreen.size() != 0) && (((Screen) selectAllScreen.get(0)).getSid() == null) && (sid != null)) {
 				selectAllScreen.get(0).setSid(sid);
@@ -318,10 +319,19 @@ public class QianduanController {
 			argMap.put("code", Integer.valueOf(1003));
 			argMap.put("message", "屏幕不存在");
 			return JsonUtils.objectToJson(argMap);
-		}else if(!selectAllScreen.get(0).getUserId().equals(user.getId())) {
+		}else if(user.getRole()==1 && !selectAllScreen.get(0).getUserId().equals(user.getId())) {
 			argMap.put("code", Integer.valueOf(1004));
 			argMap.put("message", "屏幕不属于该用户");
 			return JsonUtils.objectToJson(argMap);
+		}else if(user.getRole()==2) {
+			map.remove("username");
+			map.put("id", user.getAdminId());
+			List<User> userList = userService.selectAllUser(map);
+			if(!userList.get(0).getId().equals(selectAllScreen.get(0).getUserId())) {
+				argMap.put("code", Integer.valueOf(1004));
+				argMap.put("message", "屏幕不属于该用户");
+				return JsonUtils.objectToJson(argMap);
+			}
 		}
 		screen = (Screen) selectAllScreen.get(0);
 		Room room = this.roomService.selectScreenByRoom(screen.getRoom());
@@ -343,6 +353,7 @@ public class QianduanController {
 			argMap.put("usernameScreen", usernameScreen);
 		}
 		argMap.put("meetingName", room.getNum());
+		argMap.put("meetingId", room.getId());
 
 		argMap.put("role", role);
 		argMap.put("serverhost", serverhost);

@@ -164,7 +164,7 @@
   
   <select id="selectAllScreen" parameterType="java.util.Map" resultMap="screenMap">
   	select 
-  		s.id s_id, s.username s_username, s.password, s.room_id, s.user_id, s.duration, s.times, s.type, s.resolution,
+  		s.id s_id, s.username s_username, s.password, s.room_id, s.user_id, s.duration, s.times, s.type, s.resolution, s.sid,
   		r.id r_id, r.num, r.position, r.`desc`,
   		u.id u_id, u.username u_username
   	from screen s left join room r on s.room_id=r.id
