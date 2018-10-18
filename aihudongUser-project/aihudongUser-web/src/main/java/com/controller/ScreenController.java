@@ -32,6 +32,7 @@ import com.service.UserService;
 import com.util.ExportExcel;
 import com.util.PageUtil;
 import com.util.ProduceId;
+import com.util.ProduceVirtualRoomIdUtil;
 
 import net.sf.json.JSONObject;
 
@@ -136,7 +137,7 @@ public class ScreenController {
     	List<Screen> screenList = screenService.selectAllScreen(map);
     	//查询该用户的剩余屏幕
     	user.setScreenRemain(user.getScreenNum()-screenList.size());
-    	if(user.getScreenNum()<Integer.parseInt(number)) {
+    	if(user.getScreenRemain()<Integer.parseInt(number)) {
     		jsonObject.put("min", "min");
     		return jsonObject.toString();
     	}
@@ -207,6 +208,14 @@ public class ScreenController {
     		user=(User) session.getAttribute("user");
     	}
     	
+    	Map<String,Object> map=new HashMap<>();
+    	//查询该用户所分配的所有屏幕
+    	map.put("userId", user.getId());
+    	List<Screen> screenList = screenService.selectAllScreen(map);
+    	if(user.getScreenNum()<=screenList.size()) {
+    		return "min";
+    	}
+    	
     	//新建房间
     	Room room=(Room) session.getAttribute("room");
     	if(room!=null) {
@@ -218,7 +227,24 @@ public class ScreenController {
     		session.removeAttribute("room");
     		logger.info(user.getUsername()+"成功开通了"+room.getNum());
     	}
-    	List<Screen> screenList=roomScreen.getScreenList();
+    	
+    	Map<String,Object> userMap=new HashMap<>();
+		userMap.put("username", user.getUsername());
+		List<User> selectAllUser = userService.selectAllUser(userMap);
+		
+    	//创建虚拟教室
+		Room virtualRoom = new Room();
+		//产生roomId
+		List<String> idList = roomService.selectAllId();
+		ProduceVirtualRoomIdUtil util = new ProduceVirtualRoomIdUtil();
+    	virtualRoom.setId(util.ProduceVirtualRoomId(idList));
+    	virtualRoom.setNum(user.getUsername()+"'s virtual room");
+    	virtualRoom.setUserId(selectAllUser.get(0).getId());
+    	if(roomService.insertSelective(virtualRoom)>0) {
+    		logger.info(user.getUsername()+"成功开通了"+virtualRoom.getNum()+"虚拟教室");
+    	}
+    	
+    	screenList=roomScreen.getScreenList();
 //    	添加和修改的总记录
     	int i=0;
 //    	只记录添加数量
@@ -229,7 +255,7 @@ public class ScreenController {
 	    		Screen screenOld=screenService.selectByPrimaryKey(screen);
 	    		if(screenOld!=null){
 	//    			判断用户名重复
-	    			Map<String,Object> map=new HashMap<>();
+	    			
 	    			map.put("username", screenOld.getUsername());
 	    			List<Screen> selectAllScreen = screenService.selectAllScreen(map);
 	    			if(selectAllScreen.size()!=0){
@@ -242,7 +268,6 @@ public class ScreenController {
 	    			}
 	    		}else{
 	//    			判断用户名重复
-	    			Map<String,Object> map=new HashMap<>();
 	    			map.put("username", screen.getUsername());
 	    			List<Screen> selectAllScreen = screenService.selectAllScreen(map);
 	    			if(selectAllScreen.size()!=0){
@@ -288,9 +313,6 @@ public class ScreenController {
         		
         		screen.setPassword("123");
         		screen.setRoomId(roomScreen.getId());
-        		Map<String,Object> userMap=new HashMap<>();
-        		userMap.put("username", user.getUsername());
-        		List<User> selectAllUser = userService.selectAllUser(userMap);
         		screen.setUserId(selectAllUser.get(0).getId());
         		screen.setDuration("00:00:00");
         		screen.setTimes(0);

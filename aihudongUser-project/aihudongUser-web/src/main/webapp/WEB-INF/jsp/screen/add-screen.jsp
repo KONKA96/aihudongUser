@@ -206,7 +206,9 @@
 					window.location = "/aihudongUser-web/screen/selectAllScreen";
 				} else if (data == "error") {
 					alert("用户名存在重复，前查找后再添加");
-				} else {
+				} else if (data=="min"){
+					alert("您剩余的屏幕数量不足，请先购买！");
+				}else{
 					alert("操作失败");
 				}
 			}

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.VirtualRoomRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.model.VirtualRoomRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="room_id" property="roomId" jdbcType="VARCHAR" />
+    <result column="role" property="role" jdbcType="INTEGER" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, room_id, role, start_time, end_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from virtual_room_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from virtual_room_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.model.VirtualRoomRecord" >
+    insert into virtual_room_record (id, user_id, room_id, 
+      role, start_time, end_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=VARCHAR}, #{roomId,jdbcType=VARCHAR}, 
+      #{role,jdbcType=INTEGER}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.model.VirtualRoomRecord" >
+    insert into virtual_room_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="roomId != null" >
+        room_id,
+      </if>
+      <if test="role != null" >
+        role,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null" >
+        #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="role != null" >
+        #{role,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+	    	SELECT LAST_INSERT_ID() AS id
+	</selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.model.VirtualRoomRecord" >
+    update virtual_room_record
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null" >
+        room_id = #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="role != null" >
+        role = #{role,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.model.VirtualRoomRecord" >
+    update virtual_room_record
+    set user_id = #{userId,jdbcType=VARCHAR},
+      room_id = #{roomId,jdbcType=VARCHAR},
+      role = #{role,jdbcType=INTEGER},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <resultMap type="VirtualRoomRecord" id="virtualMap" autoMapping="true">
+  	<id column="vrr_id" property="id"/>
+  	<association property="room" javaType="Room" autoMapping="true">
+  		<id column="r_id" property="id"/>
+  	</association>
+  </resultMap>
+  <select id="selectVRR" parameterType="java.util.Map" resultMap="virtualMap">
+  	select 
+  		 vrr.id vrr_id, vrr.user_id, vrr.room_id, vrr.role, vrr.start_time, vrr.end_time,
+  		 r.id r_id, r.num, r.position, r.`desc`, r.user_id
+  	from virtual_room_record vrr left join room r on vrr.room_id=r.id
+  	<where>
+  		<if test="userId!=null">
+  			and vrr.user_id=#{userId}
+  		</if>
+  		<if test="roomId!=null">
+  			and vrr.room_id=#{roomId}
+  		</if>
+  		<if test="roomNum!='' and roomNum!=null">
+  			and r.num like concat ('%',#{roomNum},'%')
+  		</if>
+  	</where>
+  </select>
+</mapper>

@@ -147,70 +147,26 @@
 				alert("密码不得是6位以下的纯数字！");
 				return false;
 			}
-			/* $.ajax({
-				url:"/aihudongUser-web/index/register",
-				data:$("#registerForm").serialize(),
-				type:"post",
-				success:function(data){
-					if(data=='success'){
-						alert("注册成功！");
-						openLoginModal();
-						$("#logUsn").val()=$("#regUsn").val();
-						$("#logPwd").val()=$("#regPassword").val();
-					}else if(data=='exist'){
-						alert("用户名已存在！");
-					}else if(data=='error'){
-						alert("注册失败！");
-					}else if(data=='phoneexist'){
-						alert("该电话已存在！");
-					}
-				}
-			}) */
-			var obj = {};
-		    obj['user_cipher'] = "2f00b5421e66d0b223512f2ead170b86";
-		    obj['title'] = "房间1";
-		    obj['encryption'] = 0;
-		    obj['speaker_user_num'] = 13051207626;
-		   /*  
-		    obj['assistant_user_num'] = 13716680030; 
-		    obj['is_shared'] = 0;*/
-		    obj['is_series'] = 0;
-		    obj['start_time'] = 7265145939;
-		    obj['end_time'] = 0;
-		    obj['type_id'] = 1;
-		    if($("#roomId").val() == null
-					|| $("#roomId").val() == ""){
-			    $.ajax({
-					url : "http://a.buka.tv/buka/api/course/create.do",
+				$.ajax({
+					url : "/aihudongUser-web/screen/insertScreen",
+					data:$("#registerForm").serialize(),
 					type : "post",
-					contentType: 'application/json', // 这句不加出现415错误:Unsupported Media Type
-			        data: JSON.stringify(obj),
 					success : function(data) {
-						if (data.course_id!=null) {
-							$.ajax({
-								url : "/aihudongUser-web/screen/insertScreen?roomId="+data.course_id,
-								data:$("#registerForm").serialize(),
-								type : "post",
-								success : function(data) {
-									if(data=='success'){
-										alert("注册成功！");
-										openLoginModal();
-										$("#logUsn").val()=$("#regUsn").val();
-										$("#logPwd").val()=$("#regPassword").val();
-									}else if(data=='exist'){
-										alert("用户名已存在！");
-									}else if(data=='error'){
-										alert("注册失败！");
-									}else if(data=='phoneexist'){
-										alert("该电话已存在！");
-									}
-								}
-							})
+						if(data=='success'){
+							alert("注册成功！");
+							openLoginModal();
+							$("#logUsn").val()=$("#regUsn").val();
+							$("#logPwd").val()=$("#regPassword").val();
+						}else if(data=='exist'){
+							alert("用户名已存在！");
+						}else if(data=='error'){
+							alert("注册失败！");
+						}else if(data=='phoneexist'){
+							alert("该电话已存在！");
 						}
 					}
 				})
-		    }else{
-		    	$.ajax({
+		    	/* $.ajax({
 					url : "/aihudongUser-web/screen/insertScreen",
 					data : $("#editFormScreen").serialize(),
 					type : "post",
@@ -224,9 +180,8 @@
 							alert("操作失败");
 						}
 					}
-				})
+				}) */
 		    }
-		}
 	</script>
 </body>
 </html>

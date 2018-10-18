@@ -142,9 +142,6 @@
         #{remake,jdbcType=VARCHAR},
       </if>
     </trim>
-    <selectKey resultType="java.lang.String" order="AFTER" keyProperty="id">
-	    	SELECT LAST_INSERT_ID() AS id
-	</selectKey>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.model.User" >
     update user

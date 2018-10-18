@@ -1,6 +1,7 @@
 package com.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,11 @@ public class RoomServiceImpl implements RoomService {
 	public List<Room> selectAllRoom(Room room) {
 		// TODO Auto-generated method stub
 		return roomMapper.selectAllRoom(room);
+	}
+	@Override
+	public List<Room> selectVirtualRoom(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return roomMapper.selectVirtualRoom(map);
 	}
 
 }

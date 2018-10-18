@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -20,11 +21,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.model.Logger;
+import com.model.Room;
 import com.model.User;
+import com.service.RoomService;
 import com.service.UserService;
 import com.util.JsonUtils;
 import com.util.PageUtil;
 import com.util.ProduceId;
+import com.util.ProduceVirtualRoomIdUtil;
 
 import net.sf.json.JSONObject;
 import net.sf.json.util.JSONUtils;
@@ -37,6 +41,8 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private RoomService roomService;
 	@Autowired
 	private PageUtil pageUtil;
 	
@@ -163,6 +169,8 @@ public class UserController {
 			uu.setDuration("00:00:00");
 			uu.setTimes(0);
 			
+			
+			
 			index++;
 			/*if(userService.insertSelective(uu)>0) {
 				
@@ -200,6 +208,17 @@ public class UserController {
 		int count=0;
 		for (User user : userList) {
 			if(userService.insertSelective(user)>0) {
+				//创建虚拟教室
+		    	Room virtualRoom = new Room();
+		    	//产生roomId
+				List<String> idList = roomService.selectAllId();
+				ProduceVirtualRoomIdUtil util = new ProduceVirtualRoomIdUtil();
+		    	virtualRoom.setId(util.ProduceVirtualRoomId(idList));
+		    	virtualRoom.setNum(user.getUsername()+"'s virtual room");
+		    	virtualRoom.setUserId(user.getId());
+		    	if(roomService.insertSelective(virtualRoom)>0) {
+		    		logger.info(user.getUsername()+"成功开通了"+virtualRoom.getNum()+"虚拟教室");
+		    	}
 				count++;
 			}
 		}
