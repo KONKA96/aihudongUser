@@ -6,6 +6,8 @@ public class Room {
     private String id;
 
     private String num;
+    
+    private String password;
 
     private String position;
 
@@ -17,7 +19,25 @@ public class Room {
     
     private String key;
     
-    public String getKey() {
+    private Integer role;
+    
+    public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Integer getRole() {
+		return role;
+	}
+
+	public void setRole(Integer role) {
+		this.role = role;
+	}
+
+	public String getKey() {
 		return key;
 	}
 

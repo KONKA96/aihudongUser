@@ -109,14 +109,16 @@
   
   <resultMap type="VirtualRoomRecord" id="virtualMap" autoMapping="true">
   	<id column="vrr_id" property="id"/>
+  	<result column="vrr_user_id" property="userId"/>
   	<association property="room" javaType="Room" autoMapping="true">
   		<id column="r_id" property="id"/>
+  		<result column="r_user_id" property="userId"/>
   	</association>
   </resultMap>
   <select id="selectVRR" parameterType="java.util.Map" resultMap="virtualMap">
   	select 
-  		 vrr.id vrr_id, vrr.user_id, vrr.room_id, vrr.role, vrr.start_time, vrr.end_time,
-  		 r.id r_id, r.num, r.position, r.`desc`, r.user_id
+  		 vrr.id vrr_id, vrr.user_id vrr_user_id, vrr.room_id, vrr.role, vrr.start_time, vrr.end_time,
+  		 r.id r_id, r.num, r.position, r.`desc`, r.user_id r_user_id
   	from virtual_room_record vrr left join room r on vrr.room_id=r.id
   	<where>
   		<if test="userId!=null">
