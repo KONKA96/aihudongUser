@@ -132,6 +132,7 @@ public class QianduanController {
 			record.setUserId(user.getId());
 			record.setRole(user.getRole());
 			argMap.put("role", user.getRole());
+			argMap.put("truename", user.getTruename());
 			/* 微信登录
 			 * if (openid != null && openid != "") {
 				user.setOpenId(openid);
@@ -465,6 +466,12 @@ public class QianduanController {
 		}else{
 			virtualRoomRecord.setUserId(userList.get(0).getId());
 			virtualRoomRecord.setRole(userList.get(0).getRole());
+		}
+		
+		if(room.getUserId().equals(userList.get(0).getId())) {
+			argMap.put("role", "1");
+		}else {
+			argMap.put("role", "2");
 		}
 		session.setMaxInactiveInterval(0);
 		virtualRoomRecordService.insertSelective(virtualRoomRecord);
