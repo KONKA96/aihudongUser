@@ -408,6 +408,13 @@ public class QianduanController {
 				roomSet.add(room);
 			}
 			
+			List<Room> selectVirtualRoom = roomService.selectVirtualRoom(map);
+			if(selectVirtualRoom!=null && selectVirtualRoom.size()!=0) {
+				Room room = selectVirtualRoom.get(0);
+				room.setRole(1);
+				room.setKey(room.getId());
+				roomSet.add(room);
+			}
 			argMap.put("code", "200");
 			argMap.put("roomList", roomSet);
 		}
@@ -478,6 +485,7 @@ public class QianduanController {
 		ServletContext servletContext = session.getServletContext();
 		session.setAttribute("virtualRoomRecord", virtualRoomRecord.getId());
 		servletContext.setAttribute(username, session);
+		argMap.put("room", room);
 		argMap.put("code", "200");
 		argMap.put("meetingType", 0);
 		return JsonUtils.objectToJson(argMap);
@@ -537,7 +545,8 @@ public class QianduanController {
 	@RequestMapping(value="/updateVirtualRoom", produces = { "text/json;charset=UTF-8" })
 	public String updateVirtualRoom(@RequestParam(required = false) String roomId,
 			@RequestParam(required = false) String roomNum,@RequestParam(required = false) String userId,
-			@RequestParam(required = false) String desc, HttpServletResponse response) {
+			@RequestParam(required = false) String desc,@RequestParam(required = false) String password,
+			HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		Map<String, Object> argMap = new HashMap<>();
 		if(roomId==null||"".equals(roomId)) {
@@ -553,8 +562,11 @@ public class QianduanController {
 		if(userId!=null) {
 			room.setUserId(userId);
 		}
-		if(desc!=null) {
+		if(desc!="" || desc!=null) {
 			room.setDesc(desc);
+		}
+		if(password!="" || password!=null) {
+			room.setPassword(password);
 		}
 		roomService.updateByPrimaryKeySelective(room);
 		argMap.put("code", "200");

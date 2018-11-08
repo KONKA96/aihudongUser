@@ -118,7 +118,7 @@
   <select id="selectVRR" parameterType="java.util.Map" resultMap="virtualMap">
   	select 
   		 vrr.id vrr_id, vrr.user_id vrr_user_id, vrr.room_id, vrr.role, vrr.start_time, vrr.end_time,
-  		 r.id r_id, r.num, r.position, r.`desc`, r.user_id r_user_id
+  		 r.id r_id, r.num, r.position, r.`desc`, r.user_id r_user_id,r.password
   	from virtual_room_record vrr left join room r on vrr.room_id=r.id
   	<where>
   		<if test="userId!=null">

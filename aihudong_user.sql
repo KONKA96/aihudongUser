@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : 65001
 
- Date: 24/10/2018 17:59:48
+ Date: 08/11/2018 18:04:49
 */
 
 SET NAMES utf8mb4;
@@ -120,7 +120,7 @@ INSERT INTO `room` VALUES ('1023018', '房间1', NULL, NULL, NULL, NULL);
 INSERT INTO `room` VALUES ('1023021', '房间1', NULL, NULL, NULL, NULL);
 INSERT INTO `room` VALUES ('2d527c1e-5be8-4799-a96f-a3b7c27c4397', '房间1', NULL, NULL, NULL, NULL);
 INSERT INTO `room` VALUES ('5490072b-6256-4b05-8dbc-bed5cb825fb3', '房间1', NULL, NULL, NULL, NULL);
-INSERT INTO `room` VALUES ('754533', 'kkk\'s virtual room', '123', NULL, NULL, 'us23');
+INSERT INTO `room` VALUES ('754533', 'konka2\'s virtual room', '123', NULL, NULL, 'us11');
 INSERT INTO `room` VALUES ('871297', 'us2\'s virtual room', NULL, NULL, NULL, 'us2');
 INSERT INTO `room` VALUES ('878971', '房间2', NULL, NULL, NULL, NULL);
 INSERT INTO `room` VALUES ('879302', '房间3', NULL, NULL, NULL, NULL);
@@ -213,7 +213,7 @@ CREATE TABLE `user`  (
 -- ----------------------------
 INSERT INTO `user` VALUES ('us1', 'jack', '123', '杰克', 1, '15511110000', '123@163.com', '软件开发', 'IT', 1, NULL, 100, '0:0:35', 2, NULL);
 INSERT INTO `user` VALUES ('us10', 'wangnao', 'asj123', '王闹', 0, '110', '', '爱视界', '教育', 1, NULL, 2, '00:00:00', 0, NULL);
-INSERT INTO `user` VALUES ('us11', 'konka2', '123', NULL, NULL, '12334', NULL, '11111', '金融', 1, NULL, 20, '0:2:23', 2, NULL);
+INSERT INTO `user` VALUES ('us11', 'konka2', '123', '康佳', NULL, '12334', NULL, '11111', '金融', 1, NULL, 20, '0:2:23', 2, NULL);
 INSERT INTO `user` VALUES ('us12', 'konka3', '123', NULL, NULL, '111112123', NULL, '111', '金融', 1, NULL, 2, '00:00:00', 0, NULL);
 INSERT INTO `user` VALUES ('us13', 'konka22', '123', 'konka22', 0, '12334', NULL, NULL, NULL, 2, 'us11', 0, '00:00:00', 0, NULL);
 INSERT INTO `user` VALUES ('us14', 'konka23', '123', 'konka23', 0, '12334', NULL, NULL, NULL, 2, 'us11', 0, '00:00:00', 0, NULL);
@@ -226,7 +226,7 @@ INSERT INTO `user` VALUES ('us2', 'zyl', '123', NULL, NULL, '15209713366', NULL,
 INSERT INTO `user` VALUES ('us20', 'konka28', '123', 'konka28', 0, '12334', NULL, NULL, NULL, 2, 'us11', 0, '00:00:00', 0, NULL);
 INSERT INTO `user` VALUES ('us21', 'konka210', '123', 'konka210', 0, '12334', NULL, NULL, NULL, 2, 'us11', 0, '00:00:00', 0, NULL);
 INSERT INTO `user` VALUES ('us22', 'konka211', '123', 'konka211', 0, '12334', NULL, NULL, NULL, 2, 'us11', 0, '00:00:00', 0, NULL);
-INSERT INTO `user` VALUES ('us23', 'kkk', 'kkk123', NULL, NULL, 'kkk', NULL, '1111', '金融', 1, NULL, 2, '00:00:00', 0, NULL);
+INSERT INTO `user` VALUES ('us23', 'kkk', 'kkk123', '康佳', NULL, 'kkk', NULL, '1111', '金融', 1, NULL, 2, '00:00:00', 0, NULL);
 INSERT INTO `user` VALUES ('us3', 'genji', '123', '根级', 1, '111', 'lll', '1', NULL, 1, NULL, 9, '0:3:33', 1, NULL);
 INSERT INTO `user` VALUES ('us4', 'bbc', '123', 'BBC', 0, '157', '157@163.COM', '1', NULL, 2, NULL, 0, '00:00:00', 0, NULL);
 INSERT INTO `user` VALUES ('us5', 'konka5', 'kj966111', NULL, NULL, '552111', NULL, '112233', '金融', 1, NULL, 2, '00:00:00', 0, NULL);
@@ -247,7 +247,7 @@ CREATE TABLE `virtual_room_record`  (
   `start_time` datetime(0) NULL DEFAULT NULL,
   `end_time` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 12 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of virtual_room_record
@@ -257,5 +257,6 @@ INSERT INTO `virtual_room_record` VALUES (8, 'us23', '871297', 1, '2018-10-16 14
 INSERT INTO `virtual_room_record` VALUES (9, 'us11', '754533', 1, '2018-10-19 14:02:56', NULL);
 INSERT INTO `virtual_room_record` VALUES (10, 'us11', '754533', 1, '2018-10-24 09:51:44', NULL);
 INSERT INTO `virtual_room_record` VALUES (11, 'us23', '754533', 1, '2018-10-24 09:52:03', NULL);
+INSERT INTO `virtual_room_record` VALUES (12, 'us11', '754533', 1, '2018-10-25 09:51:12', NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;

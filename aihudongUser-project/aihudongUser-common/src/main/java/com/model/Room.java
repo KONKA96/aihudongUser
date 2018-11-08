@@ -15,13 +15,23 @@ public class Room {
     
     private String userId;
     
+    private String truename;
+    
     private List<Screen> screenList;
     
     private String key;
     
     private Integer role;
     
-    public String getPassword() {
+    public String getTruename() {
+		return truename;
+	}
+
+	public void setTruename(String truename) {
+		this.truename = truename;
+	}
+
+	public String getPassword() {
 		return password;
 	}
 
