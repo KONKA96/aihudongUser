@@ -65,6 +65,10 @@ public class IndexController {
 	@RequestMapping("/login")
 	public String login(User user,HttpSession session) {
 		Map<String,Object> map=new HashMap<>();
+//		base64转码
+		BASE64Encoder encoder = new BASE64Encoder();
+		String pwd = new String(encoder.encode(user.getPassword().getBytes()));
+		pwd = new String(encoder.encode(pwd.getBytes()));
 		List<User> userList =null;
 		if(user.getUsername()!=null) {
 			if(user.getUsername().length()==11) {
@@ -83,7 +87,7 @@ public class IndexController {
 		if(userList.size()==0) {
 			logger.info(user.getUsername()+"用户名不存在");
 			return "none";
-		}else if(!userList.get(0).getPassword().equals(user.getPassword())) {
+		}else if(!userList.get(0).getPassword().equals(pwd)) {
 			logger.info(user.getUsername()+"用户名密码不匹配");
 			return "pwdError";
 		}else {
@@ -268,6 +272,35 @@ public class IndexController {
 	@RequestMapping("/error")
 	public String error() {
 		return "/error/404";
+	}
+	
+	/**
+	 * 查看用户密码
+	 * @author KONKA
+	 * @param id
+	 * @return
+	 * @throws IOException
+	 */
+	@ResponseBody
+	@RequestMapping(value="/seePwd",produces = { "text/json;charset=UTF-8" })
+	public String seePwd(@RequestParam String id) throws IOException {
+//		base64解码
+		BASE64Decoder decoder = new BASE64Decoder();
+		//返回参数集合
+		Map<String, Object> argMap = new HashMap<>();
+		Map<String,Object> map=new HashMap<>();
+		map.put("id", id);
+		List<User> userList=userService.selectAllUser(map);
+		if(userList==null || userList.size()==0) {
+			argMap.put("message", "用户不存在");
+			return JsonUtils.objectToJson(argMap);
+		}
+		User user = userList.get(0);
+		String pwd = new String(decoder.decodeBuffer(user.getPassword()), "UTF-8");
+		pwd = new String(decoder.decodeBuffer(pwd), "UTF-8");
+		argMap.put("用户名", user.getUsername());
+		argMap.put("password", pwd);
+		return JsonUtils.objectToJson(argMap);
 	}
 
 }

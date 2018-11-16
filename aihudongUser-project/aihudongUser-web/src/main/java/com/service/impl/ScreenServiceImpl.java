@@ -10,6 +10,8 @@ import com.dao.ScreenMapper;
 import com.model.Screen;
 import com.service.ScreenService;
 
+import sun.misc.BASE64Encoder;
+
 @Service
 public class ScreenServiceImpl implements ScreenService {
 
@@ -24,6 +26,13 @@ public class ScreenServiceImpl implements ScreenService {
 	@Override
 	public int insertSelective(Screen screen) {
 		// TODO Auto-generated method stub
+//		base64转码
+		BASE64Encoder encoder = new BASE64Encoder();
+		if(screen.getPassword()!=null) {
+			String pwd = new String(encoder.encode(screen.getPassword().getBytes()));
+			pwd = new String(encoder.encode(pwd.getBytes()));
+			screen.setPassword(pwd);
+		}
 		return screenMapper.insertSelective(screen);
 	}
 
@@ -36,6 +45,13 @@ public class ScreenServiceImpl implements ScreenService {
 	@Override
 	public int updateByPrimaryKeySelective(Screen screen) {
 		// TODO Auto-generated method stub
+//		base64转码
+		BASE64Encoder encoder = new BASE64Encoder();
+		if(screen.getPassword()!=null) {
+			String pwd = new String(encoder.encode(screen.getPassword().getBytes()));
+			pwd = new String(encoder.encode(pwd.getBytes()));
+			screen.setPassword(pwd);
+		}
 		return screenMapper.updateByPrimaryKeySelective(screen);
 	}
 

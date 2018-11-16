@@ -32,6 +32,7 @@ import com.util.ProduceVirtualRoomIdUtil;
 
 import net.sf.json.JSONObject;
 import net.sf.json.util.JSONUtils;
+import sun.misc.BASE64Encoder;
 
 @Controller
 @RequestMapping("/user")
@@ -87,6 +88,26 @@ public class UserController {
 		modelMap.put("userList",userList);
 		logger.info("userList"+userList);
 		return "/user/list-user";
+	}
+	
+	/**
+	 * 检测输入的旧密码是否和原来匹配（个人）
+	 * 
+	 * @param password
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/testOldPwd")
+	public String testOldPwd(String password,HttpSession session) {
+//		base64转码
+		BASE64Encoder encoder = new BASE64Encoder();
+		User user = (User) session.getAttribute("user");
+		password = new String(encoder.encode(password.getBytes()));
+		password = new String(encoder.encode(password.getBytes()));
+		if (password.equals(user.getPassword())) {
+			return "success";
+		}
+		return "";
 	}
 	
 	/**
@@ -240,15 +261,20 @@ public class UserController {
 	public String updateInfo(User user,HttpSession session){
 		User adminUser=(User) session.getAttribute("user");
 		Map<String,Object> map=new HashMap<>();
-		map.put("username", user.getUsername());
-		List<User> userList = userService.selectAllUser(map);
-		if(userList.size()!=0 && !userList.get(0).getId().equals(user.getId())) {
-			return "exist";
+		if(user.getUsername()!=null) {
+			map.put("username", user.getUsername());
+			List<User> userList = userService.selectAllUser(map);
+			if(userList.size()!=0 && !userList.get(0).getId().equals(user.getId())) {
+				return "exist";
+			}
 		}
+		
 		if(user.getId()!=null && user.getId()!="") {
 			if(userService.updateByPrimaryKeySelective(user)>0) {
 				if(user.getId().equals(adminUser.getId())) {
-					session.setAttribute("user", user);
+					map.put("id", user.getId());
+					List<User> userList = userService.selectAllUser(map);
+					session.setAttribute("user", userList.get(0));
 				}
 				logger.info(adminUser.getUsername()+"成功修改了"+user.getUsername()+"的信息");
 				return "success";

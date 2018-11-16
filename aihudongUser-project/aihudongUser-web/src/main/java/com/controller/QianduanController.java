@@ -314,6 +314,12 @@ public class QianduanController {
 			return JsonUtils.objectToJson(argMap);
 		}
 		User user = (User) session.getAttribute("user");
+		
+		if(user==null||user.getId()==null) {
+			argMap.put("code", Integer.valueOf(1002));
+			argMap.put("message", "session失效");
+			return JsonUtils.objectToJson(argMap);
+		}
 		//查询参数集合
 		Map<String,Object> map = new HashMap<>();
 		Screen screen = new Screen();

@@ -35,6 +35,7 @@ import com.util.ProduceId;
 import com.util.ProduceVirtualRoomIdUtil;
 
 import net.sf.json.JSONObject;
+import sun.misc.BASE64Encoder;
 
 @Controller
 @RequestMapping("/screen")
@@ -87,6 +88,22 @@ public class ScreenController {
 		return "/screen/list-screen";
 	}
 	
+	@ResponseBody
+	@RequestMapping("/testOldPwd")
+	public String testOldPwd(String id,String password) {
+		Map<String,Object> map=new HashMap<>();
+//		base64转码
+		map.put("id", id);
+		List<Screen> screenList = screenService.selectAllScreen(map);
+		BASE64Encoder encoder = new BASE64Encoder();
+		password = new String(encoder.encode(password.getBytes()));
+		password = new String(encoder.encode(password.getBytes()));
+		if (password.equals(screenList.get(0).getPassword())) {
+			return "success";
+		}
+		return "";
+	}
+	
 	/**
      * 跳转到屏幕的修改页面
      * @param screen
@@ -130,7 +147,8 @@ public class ScreenController {
     public String selectScreenByRoom(Room room,String number,HttpSession session,ModelMap modelMap){
     	User user=(User) session.getAttribute("user");
     	JSONObject jsonObject=new JSONObject();
-    	
+//		base64转码
+		BASE64Encoder encoder = new BASE64Encoder();
     	Map<String,Object> map=new HashMap<>();
 		//查询该用户所分配的所有屏幕
     	map.put("userId", user.getId());
@@ -161,6 +179,8 @@ public class ScreenController {
     	}
     	List<String> screenIdList = screenService.selectAllId();
     	List<Screen> screenListNew=new ArrayList<>();
+    	String pwd = new String(encoder.encode("123".getBytes()));
+		pwd = new String(encoder.encode(pwd.getBytes()));
     	for(int i=0;i<Integer.parseInt(number)-start;i++) {
     		String newId=ProduceId.produceUserId(screenIdList);
     		screenIdList.add(newId);
@@ -177,7 +197,7 @@ public class ScreenController {
     		}
     		screen.setUsername(username);
     		
-    		screen.setPassword("123");
+    		screen.setPassword(pwd);
     		screen.setRoomId(room.getId());
     		screen.setUserId(((User)session.getAttribute("user")).getId());
     		screen.setDuration("00:00:00");
@@ -332,6 +352,8 @@ public class ScreenController {
 	 * @return
 	 */
     public String register(User user,HttpSession session) {
+//		base64转码
+		BASE64Encoder encoder = new BASE64Encoder();
 		Map<String,Object> map=new HashMap<>();
 		//判断用户名重复
 		if(user.getUsername()!=null) {
@@ -356,6 +378,9 @@ public class ScreenController {
 		String newId = ProduceId.produceUserId(idList);
 		user.setId(newId);
 		user.setRole(1);
+		String pwd = new String(encoder.encode(user.getPassword().getBytes()));
+		pwd = new String(encoder.encode(pwd.getBytes()));
+		user.setPassword(pwd);
 		if(userService.insertSelective(user)>0) {
 			logger.info(user.getUsername()+"用户注册成功");
 			return "success";
@@ -431,7 +456,7 @@ public class ScreenController {
 				}
 			}
     		if(screenService.updateByPrimaryKeySelective(screen)>0){
-    			logger.info(user.getUsername()+"修改"+screen.getUsername()+"屏幕成功");
+    			logger.info(user.getUsername()+"修改"+screen.getId()+"屏幕成功");
     			return "success";
     		}
     	}else{

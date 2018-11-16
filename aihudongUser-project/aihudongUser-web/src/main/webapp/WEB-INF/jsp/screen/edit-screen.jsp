@@ -34,12 +34,12 @@
                                     <input id="username" name="username" value="${screen.username }" type="text" class="form-control" placeholder="屏幕登录名">
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <%-- <div class="form-group">
                                 <label class="col-sm-2 control-label">屏幕登录密码</label>
                                 <div class="col-sm-10">
                                     <input id="password" name="password" value="${screen.password }" type="text" class="form-control" placeholder="屏幕登录密码">
                                 </div>
-                            </div>
+                            </div> --%>
                         	
                             
                             <div class="form-group">
@@ -57,6 +57,7 @@
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-primary" type="button" onclick="updateInfo()">保存</button>
                                     <button class="btn btn-white" type="reset">取消</button>
+                                    <button class="btn btn-danger" type="button" onclick="resetPwd()">重置密码</button>
                                 </div>
                             </div>
                         </form> 
@@ -82,6 +83,91 @@
 	        radioClass: 'iradio_square-green',
 	    });
 	});
+	
+	var screenId='${screen.id}';
+	function resetPwd() {
+		swal({
+			title : "请输入旧密码",
+			text : "",
+			type : "input",
+			showCancelButton : true,
+			closeOnConfirm : false,
+			closeOnCancel : true,
+			animation : "slide-from-top",
+			inputPlaceholder : "原密码",
+			confirmButtonText : "确定",
+			cancelButtonText : "取消",
+		}, function(inputValue) {
+			$.ajax({
+				url : "/aihudongUser-web/screen/testOldPwd",
+				data : "id="+screenId+"&password=" + inputValue,
+				type : "post",
+				//与原密码进行比对
+				success : function(data) {
+					//成功匹配，准备输入新密码
+					if (data == 'success') {
+						inputNewPwdFirst();
+					} else {
+						//未成功匹配
+						swal("与原密码不匹配!", "请重试", "error");
+					}
+				}
+			})
+		})
+	}
+	
+	function inputNewPwdFirst() {
+		swal({
+			title : "请输入新密码",
+			text : "",
+			type : "input",
+			showCancelButton : true,
+			closeOnConfirm : false,
+			closeOnCancel : true,
+			animation : "slide-from-top",
+			inputPlaceholder : "密码",
+			confirmButtonText : "确定",
+			cancelButtonText : "取消",
+		}, function(inputValue) {
+			inputNewPwdSecond(inputValue);
+		})
+	}
+	
+	function inputNewPwdSecond(pwd) {
+		swal({
+			title : "请再次输入新密码",
+			text : "",
+			type : "input",
+			showCancelButton : true,
+			closeOnConfirm : false,
+			closeOnCancel : true,
+			animation : "slide-from-top",
+			inputPlaceholder : "密码",
+			confirmButtonText : "确定",
+			cancelButtonText : "取消",
+		}, function(inputValue) {
+			if (pwd != inputValue) {
+				swal("两次输入密码不一致!", "操作失败", "error");
+			} else {
+				$.ajax({
+					url : "/aihudongUser-web/screen/updateScreen",
+					data : "id=" + screenId + "&password=" + inputValue,
+					type : "post",
+					//与原密码进行比对
+					success : function(data) {
+						//成功匹配，准备输入新密码
+						if (data == 'success') {
+							swal("添加成功!", "", "success");
+							//window.location="/aihudongUser-web/index/toIndex";
+						} else {
+							//未成功匹配
+							swal("添加失败!", "请重试", "error");
+						}
+					}
+				})
+			}
+		})
+	}
 	
 	function updateInfo(){
 		if($("#username")[0].value==""){

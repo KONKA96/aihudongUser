@@ -32,7 +32,16 @@
                         <div class="dropdown profile-element">
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <span class="clear">
-                               <span class="block m-t-xs"><strong class="font-bold">${sessionScope. user.username }</strong></span>
+                               <span class="block m-t-xs"><strong class="font-bold">
+                               <c:choose>
+                               	<c:when test="${sessionScope.user.truename==null}">
+                               		${sessionScope.user.username}
+                               	</c:when>
+                               	<c:otherwise>
+                               		${sessionScope.user.truename}
+                               	</c:otherwise>
+                               </c:choose>
+                               </strong></span>
                                 <span class="text-muted text-xs block">您好！<b class="caret"></b></span>
                                 </span>
                             </a>

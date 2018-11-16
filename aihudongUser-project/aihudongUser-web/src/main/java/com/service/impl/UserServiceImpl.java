@@ -10,6 +10,8 @@ import com.dao.UserMapper;
 import com.model.User;
 import com.service.UserService;
 
+import sun.misc.BASE64Encoder;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -28,6 +30,13 @@ public class UserServiceImpl implements UserService {
 
 	public int insertSelective(User user) {
 		// TODO Auto-generated method stub
+//		base64转码
+		BASE64Encoder encoder = new BASE64Encoder();
+		if(user.getPassword()!=null) {
+			String pwd = new String(encoder.encode(user.getPassword().getBytes()));
+			pwd = new String(encoder.encode(pwd.getBytes()));
+			user.setPassword(pwd);
+		}
 		if(user.getRole()==1) {
 			if(user.getScreenNum()==null) {
 				user.setScreenNum(2);
@@ -48,6 +57,13 @@ public class UserServiceImpl implements UserService {
 
 	public int updateByPrimaryKeySelective(User user) {
 		// TODO Auto-generated method stub
+//		base64转码
+		BASE64Encoder encoder = new BASE64Encoder();
+		if(user.getPassword()!=null) {
+			String pwd = new String(encoder.encode(user.getPassword().getBytes()));
+			pwd = new String(encoder.encode(pwd.getBytes()));
+			user.setPassword(pwd);
+		}
 		return userMapper.updateByPrimaryKeySelective(user);
 	}
 
