@@ -1,6 +1,11 @@
 package com.controller;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -123,6 +128,36 @@ public class QianduanController {
 				return JsonUtils.objectToJson(argMap);
 			}
 			
+			//通过用户id查询其拥有的屏幕集合
+			map = new HashMap<>();
+			map.put("userId", user.getId());
+			List<Screen> screenList = screenService.selectAllScreen(map);
+			//判断所属屏幕是否都在同一个房间
+			if(screenList!=null && screenList.size()!=0) {
+				String roomId=screenList.get(0).getRoomId();
+				int count = 0;
+				for (Screen scr : screenList) {
+					if(!roomId.equals(scr.getRoomId())) {
+						break;
+					}
+					count++;
+				}
+				//查询其已经登录的屏幕号优先进行返回，如果没有则随机返回一个屏幕号
+				int countScr = 0;
+				if(count==screenList.size()) {
+					for (Screen scr : screenList) {
+						if(servletContext.getAttribute(scr.getUsername())!=null) {
+							argMap.put("usernameScreen", scr.getUsername());
+						}else {
+							countScr++;
+						}
+					}
+					if(countScr==screenList.size()) {
+						argMap.put("usernameScreen", screenList.get(0).getUsername());
+					}
+				}
+			}
+			
 			session.setAttribute("user", user);
 
 			servletContext.setAttribute(user.getUsername(), session);
@@ -181,6 +216,8 @@ public class QianduanController {
 			argMap.put("meetingName", room.getNum());
 			argMap.put("meetingId", room.getId());
 			argMap.put("meetingType", 1);
+			
+			servletContext.setAttribute(screen.getUsername(), session);
 			
 			if ((selectAllScreen.size() != 0) && (((Screen) selectAllScreen.get(0)).getSid() == null) && (sid != null)) {
 				selectAllScreen.get(0).setSid(sid);
@@ -273,6 +310,7 @@ public class QianduanController {
 
 		user.setTimes(user.getTimes() + 1);
 		user.setDuration(countTime(duration, hour, minute, sec));
+		user.setPassword(null);
 		//统计在线人数
 		userService.updateByPrimaryKeySelective(user);
 	}
@@ -662,4 +700,5 @@ public class QianduanController {
     	roomService.insertSelective(virtualRoom);
 		return "success";
 	}
+	
 }
