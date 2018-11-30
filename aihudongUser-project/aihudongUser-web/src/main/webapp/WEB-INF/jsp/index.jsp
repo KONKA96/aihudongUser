@@ -101,10 +101,10 @@
 				                   	<span class="nav-label">屏幕管理</span>
 				                   </a>
 			                </li>
-			                <li><a class="J_menuItem" href="/aihudongUser-web/index/toDownloadFile">
+			                <!-- <li><a class="J_menuItem" href="/aihudongUser-web/index/toDownloadFile">
 			                	<i class="fa fa-columns"></i> 
 				                   	<span class="nav-label">软件下载</span>
-			                </a></li>
+			                </a></li> -->
 			                </c:if>
 			                
                     <!-- 左侧菜单结束 -->

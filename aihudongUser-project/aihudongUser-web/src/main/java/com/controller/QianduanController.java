@@ -127,10 +127,18 @@ public class QianduanController {
 				argMap.put("message", "密码错误");
 				return JsonUtils.objectToJson(argMap);
 			}
-			
-			//通过用户id查询其拥有的屏幕集合
 			map = new HashMap<>();
-			map.put("userId", user.getId());
+			
+			if(user.getRole()==1) {
+				//教师角色	
+				//通过用户id查询其拥有的屏幕集合
+				map.put("userId", user.getId());
+			}else if(user.getRole()==2) {
+				//学生角色
+				map.put("userId", user.getAdminId());
+			}
+			
+			
 			List<Screen> screenList = screenService.selectAllScreen(map);
 			//判断所属屏幕是否都在同一个房间
 			if(screenList!=null && screenList.size()!=0) {
@@ -157,6 +165,7 @@ public class QianduanController {
 					}
 				}
 			}
+			
 			
 			session.setAttribute("user", user);
 

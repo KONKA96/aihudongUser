@@ -35,6 +35,7 @@ import com.util.ProduceId;
 import com.util.ProduceVirtualRoomIdUtil;
 
 import net.sf.json.JSONObject;
+import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 @Controller
@@ -510,7 +511,8 @@ public class ScreenController {
      */
     @RequestMapping("/exportExcel")
     public void exportExcel(HttpServletResponse response,HttpSession session) throws Exception {
-        
+//		base64解码
+		BASE64Decoder decoder = new BASE64Decoder();
         // 定义表的标题
         String title = "屏幕信息";
         
@@ -534,7 +536,8 @@ public class ScreenController {
             objs[0] = sc.getRoom().getNum();
             objs[1] = sc.getId();
             objs[2] = sc.getUsername();
-            objs[3] = sc.getPassword();
+            String pwd = new String(decoder.decodeBuffer(sc.getPassword()), "UTF-8");
+    		objs[3] = new String(decoder.decodeBuffer(pwd), "UTF-8");
             objs[4] = sc.getDuration();
             objs[5] = sc.getTimes();
             dataList.add(objs);
