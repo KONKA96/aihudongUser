@@ -199,6 +199,17 @@ public class QianduanController {
 				return JsonUtils.objectToJson(argMap);
 			}
 			
+			if(selectAllScreen.get(0).getSid()!=null && sid!=null && !sid.equals(selectAllScreen.get(0).getSid())) {
+				argMap.put("code", Integer.valueOf(1002));
+				argMap.put("message", "该屏幕号已经绑定，请咨询管理员！");
+				return JsonUtils.objectToJson(argMap);
+			}
+			
+			if(sid==null || "".equals(sid) || "undefined".equals(sid)) {
+				argMap.put("code", Integer.valueOf(1002));
+				argMap.put("message", "该屏幕未绑定机器码，请咨询管理员！");
+				return JsonUtils.objectToJson(argMap);
+			}
 
 			argMap.put("username", selectAllScreen.get(0).getUsername());
 			
@@ -412,7 +423,8 @@ public class QianduanController {
 		}
 		argMap.put("meetingName", room.getNum());
 		argMap.put("meetingId", room.getId());
-
+		
+		argMap.put("type", screen.getType());
 		argMap.put("role", role);
 		argMap.put("serverhost", serverhost);
 		argMap.put("code", Integer.valueOf(200));
