@@ -70,7 +70,7 @@ public class QianduanController {
 	public String UserLogin(@RequestParam(required = false) String username,
 			@RequestParam(required = false) String password, @RequestParam(required = false) String sid,
 			@RequestParam(required = false) String serverhost, @RequestParam(required = false) String openid,
-			HttpServletResponse response, HttpServletRequest request, ModelMap modelMap) throws IOException {
+			@RequestParam(required = false) String dandianFlag,HttpServletResponse response, HttpServletRequest request, ModelMap modelMap) throws IOException {
 		response.setCharacterEncoding("utf-8");
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		ServletContext servletContext = request.getServletContext();
@@ -122,7 +122,7 @@ public class QianduanController {
 		if (selectAllUser != null && selectAllUser.size()!=0) {
 			user = selectAllUser.get(0);
 			
-			if (!user.getPassword().equals(password)) {
+			if (!"1".equals(dandianFlag) && !user.getPassword().equals(password)) {
 				argMap.put("code", Integer.valueOf(1002));
 				argMap.put("message", "密码错误");
 				return JsonUtils.objectToJson(argMap);
@@ -199,7 +199,7 @@ public class QianduanController {
 				return JsonUtils.objectToJson(argMap);
 			}
 			
-			if(selectAllScreen.get(0).getSid()!=null && sid!=null && !sid.equals(selectAllScreen.get(0).getSid())) {
+			/*if(selectAllScreen.get(0).getSid()!=null && sid!=null && !sid.equals(selectAllScreen.get(0).getSid())) {
 				argMap.put("code", Integer.valueOf(1002));
 				argMap.put("message", "该屏幕号已经绑定，请咨询管理员！");
 				return JsonUtils.objectToJson(argMap);
@@ -209,7 +209,7 @@ public class QianduanController {
 				argMap.put("code", Integer.valueOf(1002));
 				argMap.put("message", "该屏幕未绑定机器码，请咨询管理员！");
 				return JsonUtils.objectToJson(argMap);
-			}
+			}*/
 
 			argMap.put("username", selectAllScreen.get(0).getUsername());
 			
@@ -236,6 +236,7 @@ public class QianduanController {
 			argMap.put("meetingName", room.getNum());
 			argMap.put("meetingId", room.getId());
 			argMap.put("meetingType", 1);
+			argMap.put("screenType", screen.getType());
 			
 			servletContext.setAttribute(screen.getUsername(), session);
 			
@@ -245,7 +246,7 @@ public class QianduanController {
 				screenService.updateByPrimaryKeySelective(selectAllScreen.get(0));
 			}
 		}
-		session.setMaxInactiveInterval(-1);
+		session.setMaxInactiveInterval(60*60*8);
 		session.setAttribute("count", Integer.valueOf(0));
 
 		session.setAttribute("startTime", new Date());
@@ -342,6 +343,7 @@ public class QianduanController {
 		int number = screen.getTimes();
 		String duration = screen.getDuration();
 
+		screen.setPassword(null);
 		screen.setTimes(number + 1);
 		screen.setDuration(countTime(duration, hour, minute, sec));
 		screenService.updateByPrimaryKeySelective(screen);
@@ -464,6 +466,10 @@ public class QianduanController {
 			List<VirtualRoomRecord> vrrList = virtualRoomRecordService.selectVRR(map);
 			for (VirtualRoomRecord virtualRoomRecord : vrrList) {
 				Room room = virtualRoomRecord.getRoom();
+				//房间不存在或者已经被删除
+				if(room.getId()==null || "".equals(room.getId())) {
+					continue;
+				}
 				room.setKey(room.getId());
 				if(room.getUserId().equals(userList.get(0).getId())) {
 					room.setRole(1);

@@ -253,17 +253,7 @@ public class ScreenController {
 		userMap.put("username", user.getUsername());
 		List<User> selectAllUser = userService.selectAllUser(userMap);
 		
-    	//创建虚拟教室
-		Room virtualRoom = new Room();
-		//产生roomId
-		List<String> idList = roomService.selectAllId();
-		ProduceVirtualRoomIdUtil util = new ProduceVirtualRoomIdUtil();
-    	virtualRoom.setId(util.ProduceVirtualRoomId(idList));
-    	virtualRoom.setNum(user.getUsername()+"'s virtual room");
-    	virtualRoom.setUserId(selectAllUser.get(0).getId());
-    	if(roomService.insertSelective(virtualRoom)>0) {
-    		logger.info(user.getUsername()+"成功开通了"+virtualRoom.getNum()+"虚拟教室");
-    	}
+    	
     	
     	screenList=roomScreen.getScreenList();
 //    	添加和修改的总记录

@@ -7,8 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dao.UserMapper;
+import com.model.Logger;
+import com.model.Room;
 import com.model.User;
+import com.service.RoomService;
 import com.service.UserService;
+import com.util.ProduceVirtualRoomIdUtil;
 
 import sun.misc.BASE64Encoder;
 
@@ -17,6 +21,10 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserMapper userMapper;
+	@Autowired
+	private RoomService roomService;
+	
+	protected Logger logger = Logger.getLogger(this.getClass());
 	
 	public User selectByPrimaryKey(User user) {
 		// TODO Auto-generated method stub
@@ -32,6 +40,19 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 //		base64转码
 		BASE64Encoder encoder = new BASE64Encoder();
+		
+		//创建虚拟教室
+		Room virtualRoom = new Room();
+		//产生roomId
+		List<String> idList = roomService.selectAllId();
+		ProduceVirtualRoomIdUtil util = new ProduceVirtualRoomIdUtil();
+    	virtualRoom.setId(util.ProduceVirtualRoomId(idList));
+    	virtualRoom.setNum(user.getUsername()+"'s virtual room");
+    	virtualRoom.setUserId(user.getId());
+    	if(roomService.insertSelective(virtualRoom)>0) {
+    		logger.info(user.getUsername()+"成功开通了"+virtualRoom.getNum()+"虚拟教室");
+    	}
+		
 		if(user.getPassword()!=null) {
 			String pwd = new String(encoder.encode(user.getPassword().getBytes()));
 			pwd = new String(encoder.encode(pwd.getBytes()));
