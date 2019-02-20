@@ -22,6 +22,9 @@
         		expression="org.springframework.stereotype.Service"/>
         </context:component-scan>
         
+        <!--  扫描配置文件 -->
+        <context:property-placeholder location="classpath:*.properties" ignore-unresolvable="true"/>
+        
         <!--2.静态资源访问-->
 		<mvc:annotation-driven></mvc:annotation-driven>
 	
@@ -45,6 +48,7 @@
 		        <mvc:mapping path="/**/*"/>
 		        <mvc:exclude-mapping path="/front/*"/>  
 		        <mvc:exclude-mapping path="/index/*"/>
+		        <mvc:exclude-mapping path="/weichat/*"/>
 		        <mvc:exclude-mapping path="/screen/insertScreen"/>
 		        <mvc:exclude-mapping path="/**/fonts/*"/>
 			    <mvc:exclude-mapping path="/**/*.css"/>

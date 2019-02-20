@@ -81,6 +81,8 @@ public class UserController {
 		}else if(adminUser.getRole()==0) {
 			map.put("role", 1);
 			logger.info(adminUser.getUsername()+"管理员查询所有用户");
+		}else {
+			return "/user/list-user";
 		}
 		
 		Page<User> userList = (Page<User>) userService.selectAllUser(map);
@@ -147,6 +149,8 @@ public class UserController {
 	@ResponseBody
 	@RequestMapping(value="/produceUsers",produces="text/json;charset=UTF-8")
 	public String produceUsers(String number,HttpSession session) {
+//		base64转码
+		BASE64Encoder encoder = new BASE64Encoder();
 		User user=(User) session.getAttribute("user");
 		List<String> idList = userService.selectAllId();
 		JSONObject jsonObject=new JSONObject();
@@ -184,6 +188,13 @@ public class UserController {
 			uu.setTelephone(user.getTelephone());
 			uu.setEmail(user.getEmail());
 			uu.setPassword("123");
+			
+			if(uu.getPassword()!=null) {
+				String pwd = new String(encoder.encode(user.getPassword().getBytes()));
+				pwd = new String(encoder.encode(pwd.getBytes()));
+				user.setPassword(pwd);
+			}
+			
 			uu.setRole(2);
 			uu.setAdminId(user.getId());
 			uu.setScreenNum(0);
@@ -217,6 +228,8 @@ public class UserController {
 		@SuppressWarnings("unchecked")
 		List<User> userList=(List<User>) session.getAttribute("userList");
 		
+//		base64转码
+		BASE64Encoder encoder = new BASE64Encoder();
 		User adminUser=(User) session.getAttribute("user");
 		Map<String,Object> map=new HashMap<>();
 		
@@ -228,6 +241,12 @@ public class UserController {
 		}
 		int count=0;
 		for (User user : userList) {
+			if(user.getPassword()!=null) {
+				String pwd = new String(encoder.encode(user.getPassword().getBytes()));
+				pwd = new String(encoder.encode(pwd.getBytes()));
+				user.setPassword(pwd);
+			}
+			
 			if(userService.insertSelective(user)>0) {
 				//创建虚拟教室
 		    	Room virtualRoom = new Room();
@@ -259,6 +278,8 @@ public class UserController {
 	@ResponseBody
 	@RequestMapping("/updateInfo")
 	public String updateInfo(User user,HttpSession session){
+//		base64转码
+		BASE64Encoder encoder = new BASE64Encoder();
 		User adminUser=(User) session.getAttribute("user");
 		Map<String,Object> map=new HashMap<>();
 		if(user.getUsername()!=null) {
@@ -270,6 +291,13 @@ public class UserController {
 		}
 		
 		if(user.getId()!=null && user.getId()!="") {
+
+			if(user.getPassword()!=null) {
+				String pwd = new String(encoder.encode(user.getPassword().getBytes()));
+				pwd = new String(encoder.encode(pwd.getBytes()));
+				user.setPassword(pwd);
+			}
+			
 			if(userService.updateByPrimaryKeySelective(user)>0) {
 				if(user.getId().equals(adminUser.getId())) {
 					map.put("id", user.getId());
@@ -290,6 +318,11 @@ public class UserController {
 			}
 			if(newId!=null) {
 				user.setId(newId);
+			}
+			if(user.getPassword()!=null) {
+				String pwd = new String(encoder.encode(user.getPassword().getBytes()));
+				pwd = new String(encoder.encode(pwd.getBytes()));
+				user.setPassword(pwd);
 			}
 			user.setRole(2);
 			user.setAdminId(adminUser.getId());
@@ -348,5 +381,14 @@ public class UserController {
 			return "success";
 		}
 		return "error";
+	}
+	
+	public void rewardInvitedUser(User user,UserService userService) {
+		//主用户邀请一位用户增加一块屏幕数
+		if(user.getRole()==1)
+			user.setScreenNum(user.getScreenNum()+1);
+		//所有用户邀请一位用户都可以增加10个上传文件数量
+		user.setMaxFileNum(user.getMaxFileNum()+10);
+		userService.updateByPrimaryKeySelective(user);
 	}
 }

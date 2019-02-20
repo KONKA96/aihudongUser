@@ -31,7 +31,7 @@
                                 <label class="col-sm-2 control-label">用户名</label>
 
                                 <div class="col-sm-10">
-                                    <input name="username" value="${user.username }" type="text" class="form-control" placeholder="用户名">
+                                    <input name="username" value="${user.username }" type="text" class="form-control" disabled="disabled" placeholder="用户名">
                                 </div>
                             </div>
                             <%-- <div class="form-group">
@@ -75,6 +75,13 @@
                                 <label class="col-sm-2 control-label">屏幕数</label>
                                 <div class="col-sm-10">
                                     <input name="screenNum" value="${user.screenNum }" type="text" disabled="disabled" class="form-control" placeholder="屏幕数">
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">邀请码</label>
+                                <div class="col-sm-10">
+                                    <input name="inviteCode" value="${user.inviteCode }" type="text" disabled="disabled" class="form-control" placeholder="邀请码">
                                 </div>
                             </div>
                             

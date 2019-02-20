@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.EnterpriseMapper" >
+  <resultMap id="BaseResultMap" type="com.model.Enterprise" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="enterprise_name" property="enterpriseName" jdbcType="VARCHAR" />
+    <result column="logo" property="logo" jdbcType="VARCHAR" />
+    <result column="seal_file" property="sealFile" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, enterprise_name, logo, seal_file
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from enterprise
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from enterprise
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.model.Enterprise" >
+    insert into enterprise (id, enterprise_name, logo, 
+      seal_file)
+    values (#{id,jdbcType=INTEGER}, #{enterpriseName,jdbcType=VARCHAR}, #{logo,jdbcType=VARCHAR}, 
+      #{sealFile,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.model.Enterprise" >
+    insert into enterprise
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="enterpriseName != null" >
+        enterprise_name,
+      </if>
+      <if test="logo != null" >
+        logo,
+      </if>
+      <if test="sealFile != null" >
+        seal_file,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="enterpriseName != null" >
+        #{enterpriseName,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null" >
+        #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="sealFile != null" >
+        #{sealFile,jdbcType=VARCHAR},
+      </if>
+    </trim>
+    <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+	    	SELECT LAST_INSERT_ID() AS id
+	</selectKey>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.model.Enterprise" >
+    update enterprise
+    <set >
+      <if test="enterpriseName != null" >
+        enterprise_name = #{enterpriseName,jdbcType=VARCHAR},
+      </if>
+      <if test="logo != null" >
+        logo = #{logo,jdbcType=VARCHAR},
+      </if>
+      <if test="sealFile != null" >
+        seal_file = #{sealFile,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.model.Enterprise" >
+    update enterprise
+    set enterprise_name = #{enterpriseName,jdbcType=VARCHAR},
+      logo = #{logo,jdbcType=VARCHAR},
+      seal_file = #{sealFile,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectAllEnterprise" parameterType="java.util.Map" resultType="Enterprise">
+  	select
+  		<include refid="Base_Column_List" />
+  	from enterprise
+  	<where>
+  		<if test="id!=null">
+  			and id=#{id}
+  		</if>
+  		<if test="enterpriseName!='' and enterprise!=null">
+  			and enterprise_name=#{enterpriseName}
+  		</if>
+  	</where>
+  </select>
+</mapper>

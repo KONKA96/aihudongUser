@@ -11,16 +11,23 @@
     <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="job" property="job" jdbcType="VARCHAR" />
     <result column="job_type" property="jobType" jdbcType="VARCHAR" />
+    <result column="enterprise_type" property="enterpriseType" jdbcType="INTEGER" />
     <result column="role" property="role" jdbcType="INTEGER" />
     <result column="admin_id" property="adminId" jdbcType="VARCHAR" />
     <result column="screen_num" property="screenNum" jdbcType="INTEGER" />
     <result column="duration" property="duration" jdbcType="VARCHAR" />
     <result column="times" property="times" jdbcType="INTEGER" />
     <result column="remake" property="remake" jdbcType="VARCHAR" />
+    <result column="max_file_num" property="maxFileNum" jdbcType="INTEGER" />
+    <result column="invite_code" property="inviteCode" jdbcType="VARCHAR" />
+    <result column="open_id" property="openId" jdbcType="VARCHAR" />
+    <result column="union_id" property="unionId" jdbcType="VARCHAR" />
+    <result column="enterprise_id" property="enterpriseId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, username, password, truename, sex, telephone, email, job, job_type, role, admin_id, 
-    screen_num, duration, times, remake
+    id, username, password, truename, sex, telephone, email, job, job_type, enterprise_type, 
+    role, admin_id, screen_num, duration, times, remake, max_file_num, invite_code, open_id, 
+    union_id, enterprise_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -36,14 +43,18 @@
     insert into user (id, username, password, 
       truename, sex, telephone, 
       email, job, job_type, 
-      role, admin_id, screen_num, 
-      duration, times, remake
+      enterprise_type, role, admin_id, 
+      screen_num, duration, times, 
+      remake, max_file_num, invite_code, 
+      open_id, union_id, enterprise_id
       )
     values (#{id,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{truename,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, #{telephone,jdbcType=VARCHAR}, 
       #{email,jdbcType=VARCHAR}, #{job,jdbcType=VARCHAR}, #{jobType,jdbcType=VARCHAR}, 
-      #{role,jdbcType=INTEGER}, #{adminId,jdbcType=VARCHAR}, #{screenNum,jdbcType=INTEGER}, 
-      #{duration,jdbcType=VARCHAR}, #{times,jdbcType=INTEGER}, #{remake,jdbcType=VARCHAR}
+      #{enterpriseType,jdbcType=INTEGER}, #{role,jdbcType=INTEGER}, #{adminId,jdbcType=VARCHAR}, 
+      #{screenNum,jdbcType=INTEGER}, #{duration,jdbcType=VARCHAR}, #{times,jdbcType=INTEGER}, 
+      #{remake,jdbcType=VARCHAR}, #{maxFileNum,jdbcType=INTEGER}, #{inviteCode,jdbcType=VARCHAR}, 
+      #{openId,jdbcType=VARCHAR}, #{unionId,jdbcType=VARCHAR}, #{enterpriseId,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.model.User" >
@@ -76,6 +87,9 @@
       <if test="jobType != null" >
         job_type,
       </if>
+      <if test="enterpriseType != null" >
+        enterprise_type,
+      </if>
       <if test="role != null" >
         role,
       </if>
@@ -93,6 +107,21 @@
       </if>
       <if test="remake != null" >
         remake,
+      </if>
+      <if test="maxFileNum != null" >
+        max_file_num,
+      </if>
+      <if test="inviteCode != null" >
+        invite_code,
+      </if>
+      <if test="openId != null" >
+        open_id,
+      </if>
+      <if test="unionId != null" >
+        union_id,
+      </if>
+      <if test="enterpriseId != null" >
+        enterprise_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -123,6 +152,9 @@
       <if test="jobType != null" >
         #{jobType,jdbcType=VARCHAR},
       </if>
+      <if test="enterpriseType != null" >
+        #{enterpriseType,jdbcType=INTEGER},
+      </if>
       <if test="role != null" >
         #{role,jdbcType=INTEGER},
       </if>
@@ -140,6 +172,21 @@
       </if>
       <if test="remake != null" >
         #{remake,jdbcType=VARCHAR},
+      </if>
+      <if test="maxFileNum != null" >
+        #{maxFileNum,jdbcType=INTEGER},
+      </if>
+      <if test="inviteCode != null" >
+        #{inviteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null" >
+        #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="unionId != null" >
+        #{unionId,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseId != null" >
+        #{enterpriseId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -170,6 +217,9 @@
       <if test="jobType != null" >
         job_type = #{jobType,jdbcType=VARCHAR},
       </if>
+      <if test="enterpriseType != null" >
+        enterprise_type = #{enterpriseType,jdbcType=INTEGER},
+      </if>
       <if test="role != null" >
         role = #{role,jdbcType=INTEGER},
       </if>
@@ -188,6 +238,21 @@
       <if test="remake != null" >
         remake = #{remake,jdbcType=VARCHAR},
       </if>
+      <if test="maxFileNum != null" >
+        max_file_num = #{maxFileNum,jdbcType=INTEGER},
+      </if>
+      <if test="inviteCode != null" >
+        invite_code = #{inviteCode,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null" >
+        open_id = #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="unionId != null" >
+        union_id = #{unionId,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseId != null" >
+        enterprise_id = #{enterpriseId,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -201,19 +266,24 @@
       email = #{email,jdbcType=VARCHAR},
       job = #{job,jdbcType=VARCHAR},
       job_type = #{jobType,jdbcType=VARCHAR},
+      enterprise_type = #{enterpriseType,jdbcType=INTEGER},
       role = #{role,jdbcType=INTEGER},
       admin_id = #{adminId,jdbcType=VARCHAR},
       screen_num = #{screenNum,jdbcType=INTEGER},
       duration = #{duration,jdbcType=VARCHAR},
       times = #{times,jdbcType=INTEGER},
-      remake = #{remake,jdbcType=VARCHAR}
+      remake = #{remake,jdbcType=VARCHAR},
+      max_file_num = #{maxFileNum,jdbcType=INTEGER},
+      invite_code = #{inviteCode,jdbcType=VARCHAR},
+      open_id = #{openId,jdbcType=VARCHAR},
+      union_id = #{unionId,jdbcType=VARCHAR},
+      enterprise_id = #{enterpriseId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   
   <select id="selectAllUser" parameterType="java.util.Map" resultType="User">
   	select 
-  		id, username, password, truename, sex, telephone, email, job, job_type, role, admin_id, screen_num, 
-    	duration, times, remake
+  		<include refid="Base_Column_List" />
     from user
     <where>
     	<if test="id!=null">
@@ -233,6 +303,12 @@
     	</if>
     	<if test="truename!=null">
     		and concat (username,truename) like concat ('%',#{truename},'%')
+    	</if>
+    	<if test="openId!=null">
+    		and open_id=#{openId}
+    	</if>
+    	<if test="inviteCode!=null">
+    		and invite_code=#{inviteCode}
     	</if>
     </where>
   </select>

@@ -1,11 +1,6 @@
 package com.controller;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,22 +21,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.model.Enterprise;
+import com.model.Logger;
 import com.model.Record;
 import com.model.Room;
 import com.model.Screen;
 import com.model.User;
 import com.model.VirtualRoomRecord;
+import com.service.EnterpriseService;
 import com.service.RecordService;
 import com.service.RoomService;
 import com.service.ScreenService;
 import com.service.UserService;
 import com.service.VirtualRoomRecordService;
 import com.util.JsonUtils;
+import com.util.ProduceId;
 import com.util.ProduceVirtualRoomIdUtil;
+import com.util.StringRandom;
+
+import sun.misc.BASE64Encoder;
 
 @Controller
 @RequestMapping("/front")
 public class QianduanController {
+	
+	protected Logger logger = Logger.getLogger(this.getClass());
 	
 	@Autowired
 	private UserService userService;
@@ -51,6 +55,8 @@ public class QianduanController {
 	private RecordService recordService;
 	@Autowired
 	private RoomService roomService;
+	@Autowired
+	private EnterpriseService enterpriseService;
 	@Autowired
 	private VirtualRoomRecordService virtualRoomRecordService;
 	
@@ -177,12 +183,11 @@ public class QianduanController {
 			record.setRole(user.getRole());
 			argMap.put("role", user.getRole());
 			argMap.put("truename", user.getTruename());
-			/* 微信登录
-			 * if (openid != null && openid != "") {
+			
+			if (openid != null && openid != "") {
 				user.setOpenId(openid);
-				user.setPassword(null);
-				this.teacherService.updateTeacherSelected(teacher);
-			}*/
+				userService.updateByPrimaryKeySelective(user);
+			}
 			
 			//统计在线人数
 			/*Object tcount = servletContext.getAttribute("tcount");
@@ -680,6 +685,89 @@ public class QianduanController {
 		return JsonUtils.objectToJson(argMap);
 	}
 	
+	/**
+	 * 用户注册接口
+	 * @author KONKA
+	 * @param user
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="/userRegister",produces="text/json;charset=UTF-8")
+	public String userRegister(User user,@RequestParam(required = false) String inviteCode,HttpServletResponse response,
+			@RequestParam(required = false) String enterpriseName) {
+//		base64转码
+		BASE64Encoder encoder = new BASE64Encoder();
+		response.setCharacterEncoding("utf-8");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		//存放参数
+		Map<String,Object> map=new HashMap<>();
+		//返回参数
+		Map<String, Object> argMap = new HashMap<>();
+		//判断用户名重复
+		if(user.getUsername()==null || "".equals(user.getUsername())) {
+			argMap.put("code", "1001");
+			argMap.put("message", "用户名为空，注册失败");
+			return JsonUtils.objectToJson(argMap);
+		}else {
+			map.put("username",user.getUsername());
+			List<User> userList = userService.selectAllUser(map);
+			if(userList.size()!=0) {
+				argMap.put("code", "1001");
+				argMap.put("message", user.getUsername()+"用户已经存在，注册失败");
+				return JsonUtils.objectToJson(argMap);
+			}
+		}
+		//判断电话重复
+		if(user.getTelephone()!=null) {
+			map.put("telephone",user.getTelephone());
+			map.remove("username");
+			List<User> userList = userService.selectAllUser(map);
+			if(userList.size()!=0) {
+				argMap.put("code", "1001");
+				argMap.put("message", user.getTelephone()+"该手机号码已经被注册，注册失败");
+				return JsonUtils.objectToJson(argMap);
+			}
+		}
+		
+		if(inviteCode!=null && !"".equals(inviteCode)) {
+			//查询被邀请人
+			map = new HashMap<>();
+			map.put("inviteCode", inviteCode);
+			List<User> invitedUsers = userService.selectAllUser(map);
+			if(invitedUsers!=null && invitedUsers.size()!=0) {
+				//给予被邀请人奖励
+				UserController userController = new UserController();
+				userController.rewardInvitedUser(invitedUsers.get(0),userService);
+			}else {
+				argMap.put("code", "1002");
+				argMap.put("message", "邀请码不存在，注册失败");
+				return JsonUtils.objectToJson(argMap);
+			}
+		}
+		
+		if(enterpriseName!=null && !"".equals(enterpriseName)) {
+			//新建企业
+			Enterprise enterprise = new Enterprise();
+			enterprise.setEnterpriseName(enterpriseName);
+			enterpriseService.insertSelective(enterprise);
+			user.setEnterpriseId(enterprise.getId().toString());
+		}
+		
+		
+		List<String> idList = userService.selectAllId();
+		String newId = ProduceId.produceUserId(idList);
+		user.setId(newId);
+		user.setRole(1);
+		user.setInviteCode(StringRandom.getStringRandom(6));
+		
+		if(userService.insertSelective(user)>0) {
+			argMap.put("code", "200");
+			argMap.put("message", user.getUsername()+"用户注册成功");
+			return JsonUtils.objectToJson(argMap);
+		}
+		return "";
+	}
+	
 	@RequestMapping("/breakConnect")
 	public void breakConnect(String usernameUser,String sessionId,String usernameScreen,
 			String password,HttpServletResponse response,HttpServletRequest request){
@@ -713,7 +801,12 @@ public class QianduanController {
 	}
 	
 	
-	
+	/**
+	 * 添加虚拟教室
+	 * @author KONKA
+	 * @param userId
+	 * @return
+	 */
 	@RequestMapping("/insertVirtual")
 	@ResponseBody
 	public String insertVirtual(String userId) {
@@ -727,5 +820,23 @@ public class QianduanController {
     	roomService.insertSelective(virtualRoom);
 		return "success";
 	}
+	
+	/**
+	 * 自动生成邀请码程序
+	 * @author KONKA
+	 * @return
+	 */
+	/*@ResponseBody
+	@RequestMapping("/autoProduceInviteCode")
+	public String autoProduceInviteCode() {
+		List<User> selectAllUser = userService.selectAllUser(null);
+		for (User user : selectAllUser) {
+			if(user.getInviteCode()==null) {
+				user.setInviteCode(StringRandom.getStringRandom(6));
+				userService.updateByPrimaryKeySelective(user);
+			}
+		}
+		return "success";
+	}*/
 	
 }

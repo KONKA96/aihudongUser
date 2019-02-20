@@ -38,9 +38,6 @@ public class UserServiceImpl implements UserService {
 
 	public int insertSelective(User user) {
 		// TODO Auto-generated method stub
-//		base64转码
-		BASE64Encoder encoder = new BASE64Encoder();
-		
 		//创建虚拟教室
 		Room virtualRoom = new Room();
 		//产生roomId
@@ -52,12 +49,6 @@ public class UserServiceImpl implements UserService {
     	if(roomService.insertSelective(virtualRoom)>0) {
     		logger.info(user.getUsername()+"成功开通了"+virtualRoom.getNum()+"虚拟教室");
     	}
-		
-		if(user.getPassword()!=null) {
-			String pwd = new String(encoder.encode(user.getPassword().getBytes()));
-			pwd = new String(encoder.encode(pwd.getBytes()));
-			user.setPassword(pwd);
-		}
 		if(user.getRole()==1) {
 			if(user.getScreenNum()==null) {
 				user.setScreenNum(2);
@@ -72,19 +63,14 @@ public class UserServiceImpl implements UserService {
 		if(user.getTimes()==null) {
 			user.setTimes(0);
 		}
-		
+		if(user.getMaxFileNum()==null) {
+			user.setMaxFileNum(10);
+		}
 		return userMapper.insertSelective(user);
 	}
 
 	public int updateByPrimaryKeySelective(User user) {
 		// TODO Auto-generated method stub
-//		base64转码
-		BASE64Encoder encoder = new BASE64Encoder();
-		if(user.getPassword()!=null) {
-			String pwd = new String(encoder.encode(user.getPassword().getBytes()));
-			pwd = new String(encoder.encode(pwd.getBytes()));
-			user.setPassword(pwd);
-		}
 		return userMapper.updateByPrimaryKeySelective(user);
 	}
 

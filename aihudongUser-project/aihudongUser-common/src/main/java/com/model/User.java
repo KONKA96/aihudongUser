@@ -18,6 +18,8 @@ public class User {
     private String job;
 
     private String jobType;
+    
+    private Integer enterpriseType;
 
     private Integer role;
 
@@ -35,7 +37,65 @@ public class User {
     
     private String sessionId;
     
-    public Integer getScreenRemain() {
+    private Integer maxFileNum;
+
+    private String inviteCode;
+    
+    private String openId;
+    
+    private String unionId;
+    
+    private String enterpriseId;
+    
+    public String getEnterpriseId() {
+		return enterpriseId;
+	}
+
+	public void setEnterpriseId(String enterpriseId) {
+		this.enterpriseId = enterpriseId;
+	}
+
+	public String getUnionId() {
+		return unionId;
+	}
+
+	public void setUnionId(String unionId) {
+		this.unionId = unionId;
+	}
+
+	public String getOpenId() {
+		return openId;
+	}
+
+	public void setOpenId(String openId) {
+		this.openId = openId;
+	}
+
+	public Integer getEnterpriseType() {
+		return enterpriseType;
+	}
+
+	public void setEnterpriseType(Integer enterpriseType) {
+		this.enterpriseType = enterpriseType;
+	}
+
+	public Integer getMaxFileNum() {
+		return maxFileNum;
+	}
+
+	public void setMaxFileNum(Integer maxFileNum) {
+		this.maxFileNum = maxFileNum;
+	}
+
+	public String getInviteCode() {
+		return inviteCode;
+	}
+
+	public void setInviteCode(String inviteCode) {
+		this.inviteCode = inviteCode;
+	}
+
+	public Integer getScreenRemain() {
 		return screenRemain;
 	}
 
@@ -173,10 +233,13 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", sex=" + sex + ", telephone="
-				+ telephone + ", email=" + email + ", job=" + job + ", jobType=" + jobType + ", role=" + role
-				+ ", adminId=" + adminId + ", screenNum=" + screenNum + ", duration=" + duration + ", times=" + times
-				+ ", remake=" + remake + "]";
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", truename=" + truename
+				+ ", sex=" + sex + ", telephone=" + telephone + ", email=" + email + ", job=" + job + ", jobType="
+				+ jobType + ", enterpriseType=" + enterpriseType + ", role=" + role + ", adminId=" + adminId
+				+ ", screenNum=" + screenNum + ", duration=" + duration + ", times=" + times + ", remake=" + remake
+				+ ", screenRemain=" + screenRemain + ", sessionId=" + sessionId + ", maxFileNum=" + maxFileNum
+				+ ", inviteCode=" + inviteCode + "]";
 	}
+
     
 }

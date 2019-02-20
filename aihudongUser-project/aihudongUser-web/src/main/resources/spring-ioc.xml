@@ -40,5 +40,14 @@
 		<property name="basePackage" value="com.dao" />
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 	</bean>
+	
+	<bean id="propertyBean"  
+    class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
+    <property name="locations">  
+        <array>  
+            <value>classpath:*.properties</value>  
+        </array>  
+    </property>  
+	</bean>
 
 </beans>
