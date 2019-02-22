@@ -6,6 +6,8 @@ import java.util.Map;
 import com.model.User;
 
 public interface UserService {
+	List<User> userLogin(Map<String,Object> map);
+	
 	List<String> selectAllId();
 	
 	List<User> selectAllUser(Map<String,Object> map);

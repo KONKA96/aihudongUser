@@ -85,4 +85,10 @@ public class UserServiceImpl implements UserService {
 		return userMapper.selectAllId();
 	}
 
+	@Override
+	public List<User> userLogin(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return userMapper.userLogin(map);
+	}
+
 }

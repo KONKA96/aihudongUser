@@ -47,7 +47,17 @@ public class User {
     
     private String enterpriseId;
     
-    public String getEnterpriseId() {
+    private Enterprise enterprise;
+    
+    public Enterprise getEnterprise() {
+		return enterprise;
+	}
+
+	public void setEnterprise(Enterprise enterprise) {
+		this.enterprise = enterprise;
+	}
+
+	public String getEnterpriseId() {
 		return enterpriseId;
 	}
 

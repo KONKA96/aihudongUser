@@ -73,15 +73,15 @@ public class IndexController {
 		if(user.getUsername()!=null) {
 			if(user.getUsername().length()==11) {
 				map.put("telephone",user.getUsername());
-				userList=userService.selectAllUser(map);
+				userList=userService.userLogin(map);
 				if(userList.size()==0) {
 					map.remove("telephone");
 					map.put("username",user.getUsername());
-					userList=userService.selectAllUser(map);
+					userList=userService.userLogin(map);
 				}
 			}else {
 				map.put("username",user.getUsername());
-				userList=userService.selectAllUser(map);
+				userList=userService.userLogin(map);
 			}
 		}
 		if(userList.size()==0) {

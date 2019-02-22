@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <div class="ibox-content">
-                        <form class="form-horizontal" id="editForm">
+                        <form class="form-horizontal" id="editForm" action="/aihudongUser-web/user/updateInfo" method="post" enctype="multipart/form-data">
                         	<input type="hidden" name="id" value="${user.id }">
                         	<div class="form-group">
                                 <label class="col-sm-2 control-label">用户名</label>
@@ -77,6 +77,23 @@
                                     <input name="screenNum" value="${user.screenNum }" type="text" disabled="disabled" class="form-control" placeholder="屏幕数">
                                 </div>
                             </div>
+                            <input name="enterprise.id" value="${user.enterprise.id }" type="hidden">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">公司名称</label>
+                                <div class="col-sm-8">
+                                    <input id="enterpriseName" name="enterprise.enterpriseName" value="${user.enterprise.enterpriseName }" type="text" disabled="disabled" class="form-control" placeholder="公司名称">
+                                </div>
+                                <label class="col-sm-2 control-label">
+                                	<button class="btn btn-danger" type="button" onclick="updateEnterprise('${user.enterpriseId}')">修改公司名称</button>
+                                </label>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">logo</label>
+                                <div class="col-sm-10">
+									<input type="file" name="file" multiple="multiple" class="inputPic" accept="image/*">  
+                                </div>
+                            </div>
                             
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">邀请码</label>
@@ -87,7 +104,8 @@
                             
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
-                                    <button class="btn btn-primary" type="button" onclick="updateInfo()">保存</button>
+                                	<input class="btn btn-primary" type="submit" value="保存">
+                                    <!-- <button class="btn btn-primary" type="button" onclick="updateInfo()">保存</button> -->
                                     <button class="btn btn-white" type="reset">取消</button>
                                     <button class="btn btn-danger" type="button" onclick="resetPwd()">重置密码</button>
                                 </div>
@@ -214,6 +232,38 @@
 				}
 			}
 		})
+	}
+	
+	function updateEnterprise(enterpriseId){
+		swal({
+			title : "请输入公司名称",
+			text : "",
+			type : "input",
+			showCancelButton : true,
+			closeOnConfirm : false,
+			closeOnCancel : true,
+			animation : "slide-from-top",
+			inputPlaceholder : "公司名称",
+			confirmButtonText : "确定",
+			cancelButtonText : "取消",
+		}, function(inputValue) {
+			$.ajax({
+				url:"/aihudongUser-web/enterprise/updateEnterprise",
+				data:"id="+enterpriseId+"&enterpriseName="+inputValue,
+				type:"post",
+				success:function(data){
+					if(data=='success'){
+						alert("操作成功！");
+						window.location="/aihudongUser-web/user/toUserInfo";
+					}else{
+						alert("操作失败");
+					}
+				}
+			})
+		})
+		
+		
+		
 	}
 </script>
 </html>

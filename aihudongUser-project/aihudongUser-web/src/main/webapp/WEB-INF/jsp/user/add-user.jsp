@@ -32,7 +32,7 @@
                                 <label class="col-sm-2 control-label">请输入要生成的人数：</label>
 
                                 <div class="col-sm-10">
-                                    <input id="number" name="number" type="text" class="form-control" placeholder="请输入1-30之内的数字" onkeyup="changeNumber()">
+                                    <input id="number" name="number" type="text" class="form-control" placeholder="请输入1-50之内的数字" onkeyup="changeNumber()">
                                 </div>
                             </div>
                             
@@ -126,7 +126,7 @@
 					alert("操作成功！");
 					window.location="/aihudongUser-web/user/selectAllUser";
 				}else if(data=='max'){
-					alert("您创建的用户数量不能超过30人！");
+					alert("您创建的用户数量不能超过50人！");
 				}else{
 					alert("操作失败");
 				}

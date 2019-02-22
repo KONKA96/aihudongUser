@@ -313,6 +313,33 @@
     </where>
   </select>
   
+  <resultMap type="User" id="userResultMap" autoMapping="true">
+  	<id column="u_id" property="id"/>
+  	<association property="enterprise" javaType="Enterprise" autoMapping="true">
+  		<id column="e_id" property="id"/>
+  	</association>
+  </resultMap>
+  
+  <select id="userLogin" parameterType="java.util.Map" resultMap="userResultMap">
+  	select
+  		u.id u_id, u.username, u.password, u.truename, u.sex, u.telephone, u.email, u.job, u.job_type, u.enterprise_type, 
+    	u.role, u.admin_id, u.screen_num, u.duration, u.times, u.remake, u.max_file_num, u.invite_code, u.open_id, 
+    	u.union_id, u.enterprise_id,
+    	e.id e_id, e.enterprise_name, e.logo, e.seal_file
+    from user u left join enterprise e on u.enterprise_id=e.id
+    <where>
+    	<if test="id!=null">
+    		and id=#{id}
+    	</if>
+    	<if test="username!='' and username!=null ">
+    		and username=#{username}
+    	</if>
+    	<if test="telephone!='' and telephone!=null">
+    		and telephone=#{telephone}
+    	</if>
+    </where>
+  </select>
+  
   <select id="selectAllId" resultType="java.lang.String">
  	select id from user
  </select>

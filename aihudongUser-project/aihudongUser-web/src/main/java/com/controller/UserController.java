@@ -1,9 +1,10 @@
 package com.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -12,17 +13,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.model.Logger;
 import com.model.Room;
 import com.model.User;
+import com.service.EnterpriseService;
 import com.service.RoomService;
 import com.service.UserService;
 import com.util.JsonUtils;
@@ -31,7 +35,6 @@ import com.util.ProduceId;
 import com.util.ProduceVirtualRoomIdUtil;
 
 import net.sf.json.JSONObject;
-import net.sf.json.util.JSONUtils;
 import sun.misc.BASE64Encoder;
 
 @Controller
@@ -40,10 +43,18 @@ public class UserController {
 
 	protected Logger logger = Logger.getLogger(this.getClass());
 	
+	@Value("${defaultUserPwd}")
+	private String defaultUserPwd;
+	
+	@Value("${logoUploadPath}")
+	private String logoUploadPath;
+	
 	@Autowired
 	private UserService userService;
 	@Autowired
 	private RoomService roomService;
+	@Autowired
+	private EnterpriseService enterpriseService;
 	@Autowired
 	private PageUtil pageUtil;
 	
@@ -187,7 +198,7 @@ public class UserController {
 			uu.setSex(0);
 			uu.setTelephone(user.getTelephone());
 			uu.setEmail(user.getEmail());
-			uu.setPassword("123");
+			uu.setPassword(defaultUserPwd);
 			
 			if(uu.getPassword()!=null) {
 				String pwd = new String(encoder.encode(user.getPassword().getBytes()));
@@ -236,7 +247,7 @@ public class UserController {
 		map.put("adminId", adminUser.getId());
 		//查询该用户下的子用户
 		List<User> selectUserByAdmin = userService.selectAllUser(map);
-		if(selectUserByAdmin.size()+userList.size()>30) {
+		if(selectUserByAdmin.size()+userList.size()>50) {
 			return "max";
 		}
 		int count=0;
@@ -275,9 +286,10 @@ public class UserController {
 	 * @param teacher
 	 * @return
 	 */
-	@ResponseBody
+	/*@ResponseBody*/
 	@RequestMapping("/updateInfo")
-	public String updateInfo(User user,HttpSession session){
+	public String updateInfo(@RequestParam(value="file",required = false) MultipartFile file,User user,HttpSession session,
+			HttpServletRequest request){
 //		base64转码
 		BASE64Encoder encoder = new BASE64Encoder();
 		User adminUser=(User) session.getAttribute("user");
@@ -298,6 +310,28 @@ public class UserController {
 				user.setPassword(pwd);
 			}
 			
+			if(file!=null) {
+				//上传logo
+				String fileName = file.getOriginalFilename();
+				String realPath = request.getServletContext().getRealPath("/upload");
+				String newFileName=UUID.randomUUID()+fileName.substring(fileName.lastIndexOf("."));
+				String filePath = realPath+File.separator+newFileName;
+				File uploadFile =new File(filePath);
+				try {
+					file.transferTo(uploadFile);
+				} catch (IllegalStateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				String showPath=request.getContextPath()+"/upload/"+newFileName;
+				user.getEnterprise().setLogo(showPath);
+				
+				enterpriseService.updateByPrimaryKeySelective(user.getEnterprise());
+			}
+			
 			if(userService.updateByPrimaryKeySelective(user)>0) {
 				if(user.getId().equals(adminUser.getId())) {
 					map.put("id", user.getId());
@@ -305,7 +339,7 @@ public class UserController {
 					session.setAttribute("user", userList.get(0));
 				}
 				logger.info(adminUser.getUsername()+"成功修改了"+user.getUsername()+"的信息");
-				return "success";
+				return "/user/user-info";
 			}
 		}else {
 			List<String> idList = userService.selectAllId();
@@ -328,7 +362,7 @@ public class UserController {
 			user.setAdminId(adminUser.getId());
 			if(userService.insertSelective(user)>0) {
 				logger.info(adminUser.getUsername()+"新增了一条用户信息");
-				return "success";
+				return "/user/user-info";
 			}
 		}
 		return "";

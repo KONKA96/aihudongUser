@@ -49,6 +49,7 @@
 		        <mvc:exclude-mapping path="/front/*"/>  
 		        <mvc:exclude-mapping path="/index/*"/>
 		        <mvc:exclude-mapping path="/weichat/*"/>
+		        <mvc:exclude-mapping path="/rtsp/*"/>
 		        <mvc:exclude-mapping path="/screen/insertScreen"/>
 		        <mvc:exclude-mapping path="/**/fonts/*"/>
 			    <mvc:exclude-mapping path="/**/*.css"/>

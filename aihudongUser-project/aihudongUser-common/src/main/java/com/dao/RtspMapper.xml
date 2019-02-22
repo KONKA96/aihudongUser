@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.RtspMapper" >
+  <resultMap id="BaseResultMap" type="com.model.Rtsp" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="rtsp_name" property="rtspName" jdbcType="VARCHAR" />
+    <result column="rtsp_url" property="rtspUrl" jdbcType="VARCHAR" />
+    <result column="rtsp_type" property="rtspType" jdbcType="VARCHAR" />
+    <result column="rtsp_pic" property="rtspPic" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, rtsp_name, rtsp_url, rtsp_type, rtsp_pic
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from rtsp
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from rtsp
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.model.Rtsp" >
+    insert into rtsp (id, rtsp_name, rtsp_url, 
+      rtsp_type, rtsp_pic)
+    values (#{id,jdbcType=INTEGER}, #{rtspName,jdbcType=VARCHAR}, #{rtspUrl,jdbcType=VARCHAR}, 
+      #{rtspType,jdbcType=VARCHAR}, #{rtspPic,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.model.Rtsp" >
+    insert into rtsp
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="rtspName != null" >
+        rtsp_name,
+      </if>
+      <if test="rtspUrl != null" >
+        rtsp_url,
+      </if>
+      <if test="rtspType != null" >
+        rtsp_type,
+      </if>
+      <if test="rtspPic != null" >
+        rtsp_pic,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="rtspName != null" >
+        #{rtspName,jdbcType=VARCHAR},
+      </if>
+      <if test="rtspUrl != null" >
+        #{rtspUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="rtspType != null" >
+        #{rtspType,jdbcType=VARCHAR},
+      </if>
+      <if test="rtspPic != null" >
+        #{rtspPic,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.model.Rtsp" >
+    update rtsp
+    <set >
+      <if test="rtspName != null" >
+        rtsp_name = #{rtspName,jdbcType=VARCHAR},
+      </if>
+      <if test="rtspUrl != null" >
+        rtsp_url = #{rtspUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="rtspType != null" >
+        rtsp_type = #{rtspType,jdbcType=VARCHAR},
+      </if>
+      <if test="rtspPic != null" >
+        rtsp_pic = #{rtspPic,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.model.Rtsp" >
+    update rtsp
+    set rtsp_name = #{rtspName,jdbcType=VARCHAR},
+      rtsp_url = #{rtspUrl,jdbcType=VARCHAR},
+      rtsp_type = #{rtspType,jdbcType=VARCHAR},
+      rtsp_pic = #{rtspPic,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="selectAllRtsp" parameterType="java.util.Map" resultType="Rtsp">
+  	select
+  		<include refid="Base_Column_List" />
+  	from rtsp
+  	<where>
+  		<if test="id!=null">
+  			and id=#{id}
+  		</if>
+  		<if test="rtspName!='' and rtsp!=null">
+  			and rtsp_name=#{rtspName}
+  		</if>
+  	</where>
+  </select>
+</mapper>

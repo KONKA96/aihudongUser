@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : 65001
 
- Date: 20/02/2019 11:16:05
+ Date: 22/02/2019 18:01:46
 */
 
 SET NAMES utf8mb4;
@@ -32,7 +32,7 @@ CREATE TABLE `enterprise`  (
 -- ----------------------------
 -- Records of enterprise
 -- ----------------------------
-INSERT INTO `enterprise` VALUES (1, 'aiviews', NULL, NULL);
+INSERT INTO `enterprise` VALUES (1, 'aiviews', '/aihudongUser-web/upload/9ddf3c9e-7e2c-4fde-b877-1b5b66b6e71d.png', NULL);
 
 -- ----------------------------
 -- Table structure for record
@@ -47,7 +47,7 @@ CREATE TABLE `record`  (
   `start_time` datetime(0) NULL DEFAULT NULL,
   `end_time` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4663 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4664 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of record
@@ -4714,6 +4714,7 @@ INSERT INTO `record` VALUES (4659, 'us3', NULL, 1, NULL, '2018-12-26 09:08:31', 
 INSERT INTO `record` VALUES (4660, 'us115', NULL, 2, NULL, '2018-12-26 09:08:43', NULL);
 INSERT INTO `record` VALUES (4661, 'us3', NULL, 1, NULL, '2018-12-26 09:11:33', NULL);
 INSERT INTO `record` VALUES (4662, 'sc8', NULL, 4, NULL, '2019-01-28 16:37:54', NULL);
+INSERT INTO `record` VALUES (4663, 'us11', NULL, 1, NULL, '2019-02-20 11:46:00', NULL);
 
 -- ----------------------------
 -- Table structure for room
@@ -4830,6 +4831,26 @@ INSERT INTO `room` VALUES ('ebbd1417-65ae-4210-ab50-e4b892d73a3d', '房间1', NU
 INSERT INTO `room` VALUES ('f083c15d-c415-4bda-8d6f-535a1d5a892b', '房间1', NULL, NULL, NULL, 'TVRJeg==');
 INSERT INTO `room` VALUES ('f0bac642-06f1-4419-adb6-a01a9cd829f5', 'rooma', NULL, NULL, 'us41', 'TVRJeg==');
 INSERT INTO `room` VALUES ('f76c5827-edb0-4913-b312-aa44bcb7fc08', '房间1', NULL, NULL, NULL, 'TVRJeg==');
+
+-- ----------------------------
+-- Table structure for rtsp
+-- ----------------------------
+DROP TABLE IF EXISTS `rtsp`;
+CREATE TABLE `rtsp`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `rtsp_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `rtsp_url` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `rtsp_type` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `rtsp_pic` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of rtsp
+-- ----------------------------
+INSERT INTO `rtsp` VALUES (1, '爱奇艺', 'https://www.iqiyi.com/', NULL, NULL);
+INSERT INTO `rtsp` VALUES (2, '优酷', 'http://www.youku.com/', NULL, NULL);
+INSERT INTO `rtsp` VALUES (3, '土豆', 'https://www.tudou.com/', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for screen
@@ -5014,131 +5035,131 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('us1', 'jack', 'TVRJeg==', '杰克', 1, '15511110000', '123@163.com', '软件开发', 'IT', 1, 1, NULL, 100, '0:0:35', 2, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us10', 'wangnao', 'TVRJeg==', '王闹', 0, '110', '', '爱视界', '教育', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us100', 'txy4', 'TVRJeg==', 'txy4', 0, '13483346057', '', NULL, NULL, 1, 2, 'us96', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us101', 'txy5', 'TVRJeg==', 'txy5', 0, '13483346057', NULL, NULL, NULL, 1, 2, 'us96', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us102', '13910000620', 'TVRJeg==', '董鹏', 0, '13910000620', '', '卓世未来（北京）科技有限公司', '互联网', 1, 1, NULL, 9, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us103', '139100006201', 'TVRJeg==', '139100006201', 0, '13910000620', '', NULL, NULL, 1, 2, 'us102', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us104', '139100006202', 'TVRJeg==', '139100006202', 0, '13910000620', '', NULL, NULL, 1, 2, 'us102', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us105', '139100006203', 'TVRJeg==', '139100006203', 0, '13910000620', '', NULL, NULL, 1, 2, 'us102', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us106', '139100006204', 'TVRJeg==', '139100006204', 0, '13910000620', '', NULL, NULL, 1, 2, 'us102', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us107', '139100006205', 'TVRJeg==', '139100006205', 0, '13910000620', '', NULL, NULL, 1, 2, 'us102', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us108', 'huihui2', 'TVRJeg==', NULL, NULL, '123123', NULL, '123', '金融', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us109', 'qqq123', 'TVRJeg==', NULL, NULL, '11111111', NULL, '2131', '金融', 1, 1, NULL, 4, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us11', 'konka2', 'TVRJeg==', '康佳', NULL, '12334', NULL, '11111', '金融', 1, 1, NULL, 20, '0:37:40', 3, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us110', 'qqq1231', 'TVRJeg==', 'qqq1231', 0, '11111111', NULL, NULL, NULL, 1, 2, 'us109', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us111', 'qqq1232', 'TVRJeg==', 'qqq1232', 0, '11111111', NULL, NULL, NULL, 1, 2, 'us109', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us112', 'qqq1233', 'TVRJeg==', 'qqq1233', 0, '11111111', NULL, NULL, NULL, 1, 2, 'us109', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us113', 'qjg', 'V1RGU1JtVlZNVE5RVkRBOQ==', NULL, NULL, '12345678', NULL, '', '金融', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us114', 'txy21', 'TVRJeg==', 'txy21', 0, '13483346057', NULL, NULL, NULL, 1, 2, 'us98', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us115', 'txy22', 'TVRJeg==', 'txy22', 0, '13483346057', NULL, NULL, NULL, 1, 2, 'us98', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us116', 'txy23', 'TVRJeg==', 'txy23', 0, '13483346057', NULL, NULL, NULL, 1, 2, 'us98', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us117', 'txy24', 'TVRJeg==', 'txy24', 0, '13483346057', NULL, NULL, NULL, 1, 2, 'us98', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us118', 'txy25', 'TVRJeg==', 'txy25', 0, '13483346057', NULL, NULL, NULL, 1, 2, 'us98', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us119', 'Testzhang', 'TVRJeg==', NULL, NULL, '13552136521', NULL, '111', '金融', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us12', 'konka3', 'TVRJeg==', NULL, NULL, '111112123', NULL, '111', '金融', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us120', 'genji1', 'VkZaU1NtVm5QVDA9', 'genji1', 0, '111', 'lll', NULL, NULL, 1, 2, 'us3', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us121', 'genji2', 'TVRJeg==', 'genji2', 0, '111', 'lll', NULL, NULL, 1, 2, 'us3', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us122', 'genji3', 'TVRJeg==', 'genji3', 0, '111', 'lll', NULL, NULL, 1, 2, 'us3', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us123', 'genji4', 'TVRJeg==', 'genji4', 0, '111', 'lll', NULL, NULL, 1, 2, 'us3', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us1', 'jack', 'TVRJeg==', '杰克', 1, '15511110000', '123@163.com', '软件开发', 'IT', 1, 1, NULL, 100, '0:0:35', 2, NULL, 10, 'PfR96D', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us10', 'wangnao', 'TVRJeg==', '王闹', 0, '110', '', '爱视界', '教育', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, '0Y715C', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us100', 'txy4', 'TVRJeg==', 'txy4', 0, '13483346057', '', NULL, NULL, 1, 2, 'us96', 0, '00:00:00', 0, NULL, 10, '791jv8', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us101', 'txy5', 'TVRJeg==', 'txy5', 0, '13483346057', NULL, NULL, NULL, 1, 2, 'us96', 0, '00:00:00', 0, NULL, 10, '902K7O', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us102', '13910000620', 'TVRJeg==', '董鹏', 0, '13910000620', '', '卓世未来（北京）科技有限公司', '互联网', 1, 1, NULL, 9, '00:00:00', 0, NULL, 10, 'sL93CI', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us103', '139100006201', 'TVRJeg==', '139100006201', 0, '13910000620', '', NULL, NULL, 1, 2, 'us102', 0, '00:00:00', 0, NULL, 10, 'F6X3U5', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us104', '139100006202', 'TVRJeg==', '139100006202', 0, '13910000620', '', NULL, NULL, 1, 2, 'us102', 0, '00:00:00', 0, NULL, 10, 'UE0AS8', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us105', '139100006203', 'TVRJeg==', '139100006203', 0, '13910000620', '', NULL, NULL, 1, 2, 'us102', 0, '00:00:00', 0, NULL, 10, 'Bt092b', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us106', '139100006204', 'TVRJeg==', '139100006204', 0, '13910000620', '', NULL, NULL, 1, 2, 'us102', 0, '00:00:00', 0, NULL, 10, 'b9Uutv', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us107', '139100006205', 'TVRJeg==', '139100006205', 0, '13910000620', '', NULL, NULL, 1, 2, 'us102', 0, '00:00:00', 0, NULL, 10, 'W44yK1', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us108', 'huihui2', 'TVRJeg==', NULL, NULL, '123123', NULL, '123', '金融', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, 'jM251x', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us109', 'qqq123', 'TVRJeg==', NULL, NULL, '11111111', NULL, '2131', '金融', 1, 1, NULL, 4, '00:00:00', 0, NULL, 10, 'e9Oiq5', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us11', 'konka2', 'TVRJeg==', '康佳', 0, '12334', '', '11111', '金融', 1, 1, NULL, 20, '0:37:40', 3, NULL, 10, '84sq6e', NULL, NULL, '1');
+INSERT INTO `user` VALUES ('us110', 'qqq1231', 'TVRJeg==', 'qqq1231', 0, '11111111', NULL, NULL, NULL, 1, 2, 'us109', 0, '00:00:00', 0, NULL, 10, '2Qp5zo', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us111', 'qqq1232', 'TVRJeg==', 'qqq1232', 0, '11111111', NULL, NULL, NULL, 1, 2, 'us109', 0, '00:00:00', 0, NULL, 10, 'DrU38r', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us112', 'qqq1233', 'TVRJeg==', 'qqq1233', 0, '11111111', NULL, NULL, NULL, 1, 2, 'us109', 0, '00:00:00', 0, NULL, 10, 'gq0215', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us113', 'qjg', 'V1RGU1JtVlZNVE5RVkRBOQ==', NULL, NULL, '12345678', NULL, '', '金融', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, 'Q44q3J', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us114', 'txy21', 'TVRJeg==', 'txy21', 0, '13483346057', NULL, NULL, NULL, 1, 2, 'us98', 0, '00:00:00', 0, NULL, 10, '2f6P2Y', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us115', 'txy22', 'TVRJeg==', 'txy22', 0, '13483346057', NULL, NULL, NULL, 1, 2, 'us98', 0, '00:00:00', 0, NULL, 10, 'G1e9x5', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us116', 'txy23', 'TVRJeg==', 'txy23', 0, '13483346057', NULL, NULL, NULL, 1, 2, 'us98', 0, '00:00:00', 0, NULL, 10, '385KbO', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us117', 'txy24', 'TVRJeg==', 'txy24', 0, '13483346057', NULL, NULL, NULL, 1, 2, 'us98', 0, '00:00:00', 0, NULL, 10, '4u4616', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us118', 'txy25', 'TVRJeg==', 'txy25', 0, '13483346057', NULL, NULL, NULL, 1, 2, 'us98', 0, '00:00:00', 0, NULL, 10, '2c9hh0', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us119', 'Testzhang', 'TVRJeg==', NULL, NULL, '13552136521', NULL, '111', '金融', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, '52496r', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us12', 'konka3', 'TVRJeg==', NULL, NULL, '111112123', NULL, '111', '金融', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, 'UV0RgT', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us120', 'genji1', 'VkZaU1NtVm5QVDA9', 'genji1', 0, '111', 'lll', NULL, NULL, 1, 2, 'us3', 0, '00:00:00', 0, NULL, 10, '554189', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us121', 'genji2', 'TVRJeg==', 'genji2', 0, '111', 'lll', NULL, NULL, 1, 2, 'us3', 0, '00:00:00', 0, NULL, 10, 'A0W6CH', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us122', 'genji3', 'TVRJeg==', 'genji3', 0, '111', 'lll', NULL, NULL, 1, 2, 'us3', 0, '00:00:00', 0, NULL, 10, 'IQ05Z9', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us123', 'genji4', 'TVRJeg==', 'genji4', 0, '111', 'lll', NULL, NULL, 1, 2, 'us3', 0, '00:00:00', 0, NULL, 10, '241226', NULL, NULL, NULL);
 INSERT INTO `user` VALUES ('us124', '222123', '123', NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, 3, '00:00:00', 0, NULL, 20, '3YWMb5', NULL, NULL, NULL);
 INSERT INTO `user` VALUES ('us125', '222kkk', '123', NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, '0Y7ZZJ', NULL, NULL, '1');
-INSERT INTO `user` VALUES ('us13', 'konka22', 'TVRJeg==', 'konka22', 0, '12334', '', NULL, NULL, 1, 2, 'us11', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us14', 'konka23', 'TVRJeg==', 'konka23', 0, '12334', NULL, NULL, NULL, 1, 2, 'us11', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us15', 'konka27', 'TVRJeg==', 'konka27', 0, '12334', NULL, NULL, NULL, 1, 2, 'us11', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us16', 'konka25', 'TVRJeg==', 'konka25', 0, '12334', NULL, NULL, NULL, 1, 2, 'us11', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us17', 'konka29', 'TVRJeg==', NULL, NULL, NULL, NULL, NULL, NULL, 1, 2, NULL, NULL, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us18', 'konka26', 'TVRJeg==', NULL, NULL, NULL, NULL, NULL, NULL, 1, 2, NULL, 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us19', 'konka', 'TVRJeg==', 'konka', 0, NULL, NULL, NULL, NULL, 1, 0, NULL, 0, NULL, NULL, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us2', 'zyl', 'TVRJeg==', '张勇良', 0, '15209713366', '', '爱视界', '教育', 1, 1, NULL, 2, '2:54:0', 27, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us20', 'konka28', 'TVRJeg==', 'konka28', 0, '12334', NULL, NULL, NULL, 1, 2, 'us11', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us21', 'konka210', 'TVRJeg==', 'konka210', 0, '12334', NULL, NULL, NULL, 1, 2, 'us11', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us22', 'konka211', 'TVRJeg==', 'konka211', 0, '12334', NULL, NULL, NULL, 1, 2, 'us11', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us23', 'xmys', 'TVRJeg==', NULL, NULL, '1', NULL, '厦门演示', '教育', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us24', 'xmys1', 'TVRJeg==', 'xmys1', 0, '1', NULL, NULL, NULL, 1, 2, 'us23', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us25', 'xmys2', 'TVRJeg==', 'xmys2', 0, '1', NULL, NULL, NULL, 1, 2, 'us23', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us26', 'xmys3', 'TVRJeg==', 'xmys3', 0, '1', NULL, NULL, NULL, 1, 2, 'us23', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us27', 'xmys4', 'TVRJeg==', 'xmys4', 0, '1', NULL, NULL, NULL, 1, 2, 'us23', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us28', 'xmys5', 'TVRJeg==', 'xmys5', 0, '1', NULL, NULL, NULL, 1, 2, 'us23', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us29', '13883157511', 'TVRJeg==', '曾老师', 0, '13883157511', '', '重庆学院', '教育', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us3', 'genji', 'TVRJeg==', '根级', 1, '111', 'lll', '1', NULL, 1, 1, NULL, 9, '0:3:33', 1, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us30', '138831575111', 'TVRJeg==', '138831575111', 0, '13883157511', '', NULL, NULL, 1, 2, 'us29', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us31', '138831575112', 'TVRJeg==', '138831575112', 0, '13883157511', '', NULL, NULL, 1, 2, 'us29', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us32', '138831575113', 'TVRJeg==', '138831575113', 0, '13883157511', '', NULL, NULL, 1, 2, 'us29', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us33', '138831575114', 'TVRJeg==', '138831575114', 0, '13883157511', '', NULL, NULL, 1, 2, 'us29', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us34', '138831575115', 'TVRJeg==', '138831575115', 0, '13883157511', '', NULL, NULL, 1, 2, 'us29', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us35', 'wanghui', 'TVRJeg==', '王辉', 0, '120', '', '大王辉科技有限公司', '互联网', 1, 1, NULL, 2, '0:19:40', 1, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us36', 'wanghui1', 'TVRJeg==', 'wanghui1', 0, '120', NULL, NULL, NULL, 1, 2, 'us35', 0, '0:16:19', 2, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us37', 'wanghui2', 'TVRJeg==', 'wanghui2', 0, '120', NULL, NULL, NULL, 1, 2, 'us35', 0, '0:43:4', 1, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us38', 'wanghui3', 'TVRJeg==', 'wanghui3', 0, '120', NULL, NULL, NULL, 1, 2, 'us35', 0, '0:1:54', 1, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us39', 'wanghui4', 'TVRJeg==', 'wanghui4', 0, '120', NULL, NULL, NULL, 1, 2, 'us35', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us4', 'bbc', 'TVRJeg==', 'BBC', 0, '157', '157@163.COM', '1', NULL, 1, 2, NULL, 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us40', 'wanghui5', 'TVRJeg==', 'wanghui5', 0, '120', NULL, NULL, NULL, 1, 2, 'us35', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us41', 'cxy', 'TVRJeg==', NULL, NULL, '123', NULL, '', '互联网', 1, 1, NULL, 6, '5:8:30', 23, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us42', 'cxy1', 'TVRJeg==', NULL, NULL, '000', NULL, '', '互联网', 1, 1, NULL, 2, '0:17:43', 6, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us43', 'cxy11', 'TVRJeg==', 'cxy11', 1, '000', '', NULL, NULL, 1, 2, 'us42', 0, '0:53:23', 3, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us44', 'cxy12', 'TVRJeg==', 'cxy12', 0, '000', NULL, NULL, NULL, 1, 2, 'us42', 0, '0:5:43', 1, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us45', 'asj', 'TVRJeg==', NULL, NULL, '8', NULL, '3', '教育', 1, 1, NULL, 2, '0:4:18', 2, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us46', 'asj1', 'TVRJeg==', 'asj1', 0, '8', NULL, NULL, NULL, 1, 2, 'us45', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us47', 'asj2', 'TVRJeg==', 'asj2', 0, '8', NULL, NULL, NULL, 1, 2, 'us45', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us48', 'asj3', 'TVRJeg==', 'asj3', 0, '8', NULL, NULL, NULL, 1, 2, 'us45', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us49', 'asj4', 'TVRJeg==', 'asj4', 0, '8', NULL, NULL, NULL, 1, 2, 'us45', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us5', 'konka5', 'TVRJeg==', NULL, NULL, '552111', NULL, '112233', '金融', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us50', 'asj5', 'TVRJeg==', 'asj5', 0, '8', NULL, NULL, NULL, 1, 2, 'us45', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us51', 'huihui', 'TVRJeg==', NULL, NULL, '155', NULL, '111', '金融', 1, 1, NULL, 2, '0:3:13', 1, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us52', 'txsd', 'TVRJeg==', NULL, NULL, '11', NULL, '泰讯视动', '金融', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us53', 'caxjyj', 'TVRJeg==', NULL, NULL, '888', NULL, '淳安县教育局', '教育', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us54', 'lcb', 'TVRJeg==', 'Dr. Liu', 0, '123321', '', 'l', '金融', 1, 1, NULL, 2, '0:17:46', 1, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us55', 'dfsd', 'TVRJeg==', NULL, NULL, 'dongfangsaide', NULL, 'l', '教育', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us56', 'lcb1', 'TVRJeg==', '学生甲', 0, '123321', '', NULL, NULL, 1, 2, 'us54', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us57', 'lcb2', 'TVRJeg==', 'lcb2', 0, '123321', NULL, NULL, NULL, 1, 2, 'us54', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us58', 'lcb3', 'TVRJeg==', 'lcb3', 0, '123321', NULL, NULL, NULL, 1, 2, 'us54', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us59', 'lcb4', 'TVRJeg==', 'lcb4', 0, '123321', NULL, NULL, NULL, 1, 2, 'us54', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us6', 'laser', 'TVRJeg==', NULL, NULL, '13701241641', NULL, NULL, NULL, 1, 1, NULL, 9, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us60', 'lcb5', 'TVRJeg==', 'lcb5', 0, '123321', NULL, NULL, NULL, 1, 2, 'us54', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us61', 'cxy13', 'TVRJeg==', 'cxy13', 0, '000', NULL, NULL, NULL, 1, 2, 'us42', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us62', 'cxy14', 'TVRJeg==', 'cxy14', 0, '000', NULL, NULL, NULL, 1, 2, 'us42', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us63', 'cxy15', 'TVRJeg==', 'cxy15', 0, '000', NULL, NULL, NULL, 1, 2, 'us42', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us64', 'cxy22', 'TVRJeg==', NULL, NULL, '333', NULL, '', '金融', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us65', 'cxy221', 'TVRJeg==', 'cxy221', 0, '333', NULL, NULL, NULL, 1, 2, 'us64', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us66', 'cxy222', 'TVRJeg==', 'cxy222', 0, '333', NULL, NULL, NULL, 1, 2, 'us64', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us67', 'cxy223', 'TVRJeg==', 'cxy223', 0, '333', NULL, NULL, NULL, 1, 2, 'us64', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us68', 'zhouyunfei', 'TVRJeg==', NULL, NULL, '1111111111', NULL, 'zhouyunfei', '金融', 1, 1, NULL, 2, '0:4:28', 1, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us69', 'zhouyunfei1', 'TVRJeg==', 'zhouyunfei1', 0, '1111111111', NULL, NULL, NULL, 1, 2, 'us68', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us7', '1111', 'TVRJeg==', NULL, NULL, '1111', NULL, NULL, NULL, 1, 1, NULL, 9, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us70', 'zhouyunfei2', 'TVRJeg==', 'zhouyunfei2', 0, '1111111111', NULL, NULL, NULL, 1, 2, 'us68', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us71', 'zhouyunfei3', 'TVRJeg==', 'zhouyunfei3', 0, '1111111111', NULL, NULL, NULL, 1, 2, 'us68', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us72', 'zhouyunfei4', 'TVRJeg==', 'zhouyunfei4', 0, '1111111111', NULL, NULL, NULL, 1, 2, 'us68', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us73', 'zhouyunfei5', 'TVRJeg==', 'zhouyunfei5', 0, '1111111111', NULL, NULL, NULL, 1, 2, 'us68', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us74', 'zyl1', 'TVRJeg==', 'zyl1', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us2', 0, '6:41:5', 11, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us75', 'zyl2', 'TVRJeg==', 'zyl2', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us2', 0, '0:34:15', 3, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us76', 'zyl11', 'TVRJeg==', 'zyl11', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us74', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us77', 'zyl12', 'TVRJeg==', 'zyl12', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us74', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us78', 'zyl13', 'TVRJeg==', 'zyl13', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us74', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us79', 'zyl3', 'TVRJeg==', 'zyl3', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us2', 0, '0:5:2', 2, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us8', 'hegang', 'TVRJeg==', '何刚', 0, '17001160998', 'legou_he@dell.com', 'dell销售', '1', 1, 1, NULL, 9, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us80', 'zyl4', 'TVRJeg==', 'zyl4', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us2', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us81', 'zyl5', 'TVRJeg==', 'zyl5', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us2', 0, '0:5:21', 1, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us82', 'blgzh', 'TVRJeg==', NULL, NULL, '11111', NULL, '北理工珠海', '教育', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us83', 'sbtq', 'TVRJeg==', NULL, NULL, '12345', NULL, '圣邦天麒', '教育', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us84', 'syb', 'TVRJeg==', '', 0, '15216733179', '', 'helloword', '教育', 1, 1, NULL, 2, '0:13:5', 3, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us85', 'stu1', 'TVRJeg==', 'syb1', 0, '15216733179', '', NULL, NULL, 1, 2, 'us84', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us86', 'stu2', 'TVRJeg==', 'syb2', 0, '15216733179', '', NULL, NULL, 1, 2, 'us84', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us87', 'stu3', 'TVRJeg==', 'syb3', 0, '15216733179', '', NULL, NULL, 1, 2, 'us84', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us88', 'cxy2', 'TVRJeg==', 'cxy2', 0, '123', NULL, NULL, NULL, 1, 2, 'us41', 0, '0:1:22', 3, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us89', 'cxy3', 'TVRJeg==', 'cxy3', 0, '123', NULL, NULL, NULL, 1, 2, 'us41', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us9', 'zyltest123', 'TVRJeg==', 'zyl', 0, '12231101', '135@163', '', '教育', 1, 1, NULL, 10, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us90', 'cxy4', 'TVRJeg==', 'cxy4', 0, '123', NULL, NULL, NULL, 1, 2, 'us41', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us91', 'zyl6', 'TVRJeg==', 'zyl6', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us2', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us92', 'zyl7', 'TVRJeg==', 'zyl7', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us2', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us93', 'zyl8', 'TVRJeg==', 'zyl8', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us2', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us94', 'zyl9', 'TVRJeg==', 'zyl9', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us2', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us95', 'zyl10', 'TVRJeg==', 'zyl10', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us2', 0, '00:00:00', 0, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us96', 'txy', 'TVRJeg==', '', 0, '13483346057', '', 'txy', '教育', 1, 1, NULL, 20, '0:0:58', 2, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us97', 'txy1', 'TVRJeg==', 'txy1', 0, '13483346057', NULL, NULL, NULL, 1, 2, 'us96', 0, '0:21:26', 3, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us98', 'txy2', 'TVRJeg==', 'txy2', 0, '13483346057', NULL, NULL, NULL, 1, 2, 'us96', 0, '1:15:19', 1, NULL, 10, NULL, NULL, NULL, NULL);
-INSERT INTO `user` VALUES ('us99', 'txy3', 'TVRJeg==', 'txy3', 0, '13483346057', NULL, NULL, NULL, 1, 2, 'us96', 0, '1:9:7', 1, NULL, 10, NULL, NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us13', 'konka22', 'TVRJeg==', 'konka22', 0, '12334', '', NULL, NULL, 1, 2, 'us11', 0, '00:00:00', 0, NULL, 10, '58KC02', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us14', 'konka23', 'TVRJeg==', 'konka23', 0, '12334', NULL, NULL, NULL, 1, 2, 'us11', 0, '00:00:00', 0, NULL, 10, 'A0197M', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us15', 'konka27', 'TVRJeg==', 'konka27', 0, '12334', NULL, NULL, NULL, 1, 2, 'us11', 0, '00:00:00', 0, NULL, 10, '68O4Nv', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us16', 'konka25', 'TVRJeg==', 'konka25', 0, '12334', NULL, NULL, NULL, 1, 2, 'us11', 0, '00:00:00', 0, NULL, 10, '374102', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us17', 'konka29', 'TVRJeg==', NULL, NULL, NULL, NULL, NULL, NULL, 1, 2, NULL, NULL, '00:00:00', 0, NULL, 10, 'LpUZ2S', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us18', 'konka26', 'TVRJeg==', NULL, NULL, NULL, NULL, NULL, NULL, 1, 2, NULL, 0, '00:00:00', 0, NULL, 10, '8a1P5F', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us19', 'konka', 'TVRJeg==', 'konka', 0, NULL, NULL, NULL, NULL, 1, 0, NULL, 0, NULL, NULL, NULL, 10, 'w350jC', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us2', 'zyl', 'TVRJeg==', '张勇良', 0, '15209713366', '', '爱视界', '教育', 1, 1, NULL, 2, '2:54:0', 27, NULL, 10, '794k28', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us20', 'konka28', 'TVRJeg==', 'konka28', 0, '12334', NULL, NULL, NULL, 1, 2, 'us11', 0, '00:00:00', 0, NULL, 10, 'Z02M71', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us21', 'konka210', 'TVRJeg==', 'konka210', 0, '12334', NULL, NULL, NULL, 1, 2, 'us11', 0, '00:00:00', 0, NULL, 10, 'Kc3f71', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us22', 'konka211', 'TVRJeg==', 'konka211', 0, '12334', NULL, NULL, NULL, 1, 2, 'us11', 0, '00:00:00', 0, NULL, 10, '43Y591', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us23', 'xmys', 'TVRJeg==', NULL, NULL, '1', NULL, '厦门演示', '教育', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, '7jf6R0', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us24', 'xmys1', 'TVRJeg==', 'xmys1', 0, '1', NULL, NULL, NULL, 1, 2, 'us23', 0, '00:00:00', 0, NULL, 10, 'D0O93G', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us25', 'xmys2', 'TVRJeg==', 'xmys2', 0, '1', NULL, NULL, NULL, 1, 2, 'us23', 0, '00:00:00', 0, NULL, 10, 'P7xcVs', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us26', 'xmys3', 'TVRJeg==', 'xmys3', 0, '1', NULL, NULL, NULL, 1, 2, 'us23', 0, '00:00:00', 0, NULL, 10, '29tgRW', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us27', 'xmys4', 'TVRJeg==', 'xmys4', 0, '1', NULL, NULL, NULL, 1, 2, 'us23', 0, '00:00:00', 0, NULL, 10, '14784e', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us28', 'xmys5', 'TVRJeg==', 'xmys5', 0, '1', NULL, NULL, NULL, 1, 2, 'us23', 0, '00:00:00', 0, NULL, 10, 'Q4x99A', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us29', '13883157511', 'TVRJeg==', '曾老师', 0, '13883157511', '', '重庆学院', '教育', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, '4qg1pM', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us3', 'genji', 'TVRJeg==', '根级', 1, '111', 'lll', '1', NULL, 1, 1, NULL, 9, '0:3:33', 1, NULL, 10, 'Ao17bx', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us30', '138831575111', 'TVRJeg==', '138831575111', 0, '13883157511', '', NULL, NULL, 1, 2, 'us29', 0, '00:00:00', 0, NULL, 10, '84Ix9n', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us31', '138831575112', 'TVRJeg==', '138831575112', 0, '13883157511', '', NULL, NULL, 1, 2, 'us29', 0, '00:00:00', 0, NULL, 10, 'eRS3m3', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us32', '138831575113', 'TVRJeg==', '138831575113', 0, '13883157511', '', NULL, NULL, 1, 2, 'us29', 0, '00:00:00', 0, NULL, 10, '1OpkvG', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us33', '138831575114', 'TVRJeg==', '138831575114', 0, '13883157511', '', NULL, NULL, 1, 2, 'us29', 0, '00:00:00', 0, NULL, 10, '96940o', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us34', '138831575115', 'TVRJeg==', '138831575115', 0, '13883157511', '', NULL, NULL, 1, 2, 'us29', 0, '00:00:00', 0, NULL, 10, '077gsy', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us35', 'wanghui', 'TVRJeg==', '王辉', 0, '120', '', '大王辉科技有限公司', '互联网', 1, 1, NULL, 2, '0:19:40', 1, NULL, 10, 'Jp0L11', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us36', 'wanghui1', 'TVRJeg==', 'wanghui1', 0, '120', NULL, NULL, NULL, 1, 2, 'us35', 0, '0:16:19', 2, NULL, 10, '795VqO', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us37', 'wanghui2', 'TVRJeg==', 'wanghui2', 0, '120', NULL, NULL, NULL, 1, 2, 'us35', 0, '0:43:4', 1, NULL, 10, 'fCw5r8', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us38', 'wanghui3', 'TVRJeg==', 'wanghui3', 0, '120', NULL, NULL, NULL, 1, 2, 'us35', 0, '0:1:54', 1, NULL, 10, '6QaN46', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us39', 'wanghui4', 'TVRJeg==', 'wanghui4', 0, '120', NULL, NULL, NULL, 1, 2, 'us35', 0, '00:00:00', 0, NULL, 10, '79ebN0', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us4', 'bbc', 'TVRJeg==', 'BBC', 0, '157', '157@163.COM', '1', NULL, 1, 2, NULL, 0, '00:00:00', 0, NULL, 10, '99z4I2', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us40', 'wanghui5', 'TVRJeg==', 'wanghui5', 0, '120', NULL, NULL, NULL, 1, 2, 'us35', 0, '00:00:00', 0, NULL, 10, '5n2DVY', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us41', 'cxy', 'TVRJeg==', NULL, NULL, '123', NULL, '', '互联网', 1, 1, NULL, 6, '5:8:30', 23, NULL, 10, '90g915', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us42', 'cxy1', 'TVRJeg==', NULL, NULL, '000', NULL, '', '互联网', 1, 1, NULL, 2, '0:17:43', 6, NULL, 10, 'j0Y778', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us43', 'cxy11', 'TVRJeg==', 'cxy11', 1, '000', '', NULL, NULL, 1, 2, 'us42', 0, '0:53:23', 3, NULL, 10, '980A7I', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us44', 'cxy12', 'TVRJeg==', 'cxy12', 0, '000', NULL, NULL, NULL, 1, 2, 'us42', 0, '0:5:43', 1, NULL, 10, 'j973Dp', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us45', 'asj', 'TVRJeg==', NULL, NULL, '8', NULL, '3', '教育', 1, 1, NULL, 2, '0:4:18', 2, NULL, 10, '900NCI', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us46', 'asj1', 'TVRJeg==', 'asj1', 0, '8', NULL, NULL, NULL, 1, 2, 'us45', 0, '00:00:00', 0, NULL, 10, 'UT27M0', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us47', 'asj2', 'TVRJeg==', 'asj2', 0, '8', NULL, NULL, NULL, 1, 2, 'us45', 0, '00:00:00', 0, NULL, 10, '8CS70V', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us48', 'asj3', 'TVRJeg==', 'asj3', 0, '8', NULL, NULL, NULL, 1, 2, 'us45', 0, '00:00:00', 0, NULL, 10, 'Qd2d43', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us49', 'asj4', 'TVRJeg==', 'asj4', 0, '8', NULL, NULL, NULL, 1, 2, 'us45', 0, '00:00:00', 0, NULL, 10, '2DucEw', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us5', 'konka5', 'TVRJeg==', NULL, NULL, '552111', NULL, '112233', '金融', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, 'fX4MOg', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us50', 'asj5', 'TVRJeg==', 'asj5', 0, '8', NULL, NULL, NULL, 1, 2, 'us45', 0, '00:00:00', 0, NULL, 10, 'r7Y346', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us51', 'huihui', 'TVRJeg==', NULL, NULL, '155', NULL, '111', '金融', 1, 1, NULL, 2, '0:3:13', 1, NULL, 10, 'bUD1v9', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us52', 'txsd', 'TVRJeg==', NULL, NULL, '11', NULL, '泰讯视动', '金融', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, '12xN4F', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us53', 'caxjyj', 'TVRJeg==', NULL, NULL, '888', NULL, '淳安县教育局', '教育', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, '6glgE4', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us54', 'lcb', 'TVRJeg==', 'Dr. Liu', 0, '123321', '', 'l', '金融', 1, 1, NULL, 2, '0:17:46', 1, NULL, 10, 'z6130q', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us55', 'dfsd', 'TVRJeg==', NULL, NULL, 'dongfangsaide', NULL, 'l', '教育', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, 'Ne7o4h', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us56', 'lcb1', 'TVRJeg==', '学生甲', 0, '123321', '', NULL, NULL, 1, 2, 'us54', 0, '00:00:00', 0, NULL, 10, '25F2vS', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us57', 'lcb2', 'TVRJeg==', 'lcb2', 0, '123321', NULL, NULL, NULL, 1, 2, 'us54', 0, '00:00:00', 0, NULL, 10, '8N1G20', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us58', 'lcb3', 'TVRJeg==', 'lcb3', 0, '123321', NULL, NULL, NULL, 1, 2, 'us54', 0, '00:00:00', 0, NULL, 10, '6r9h8b', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us59', 'lcb4', 'TVRJeg==', 'lcb4', 0, '123321', NULL, NULL, NULL, 1, 2, 'us54', 0, '00:00:00', 0, NULL, 10, '844301', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us6', 'laser', 'TVRJeg==', NULL, NULL, '13701241641', NULL, NULL, NULL, 1, 1, NULL, 9, '00:00:00', 0, NULL, 10, '7EppIR', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us60', 'lcb5', 'TVRJeg==', 'lcb5', 0, '123321', NULL, NULL, NULL, 1, 2, 'us54', 0, '00:00:00', 0, NULL, 10, '7j30mI', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us61', 'cxy13', 'TVRJeg==', 'cxy13', 0, '000', NULL, NULL, NULL, 1, 2, 'us42', 0, '00:00:00', 0, NULL, 10, 'pQT5dI', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us62', 'cxy14', 'TVRJeg==', 'cxy14', 0, '000', NULL, NULL, NULL, 1, 2, 'us42', 0, '00:00:00', 0, NULL, 10, 'Odb574', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us63', 'cxy15', 'TVRJeg==', 'cxy15', 0, '000', NULL, NULL, NULL, 1, 2, 'us42', 0, '00:00:00', 0, NULL, 10, '5kg91o', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us64', 'cxy22', 'TVRJeg==', NULL, NULL, '333', NULL, '', '金融', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, 'i449Gi', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us65', 'cxy221', 'TVRJeg==', 'cxy221', 0, '333', NULL, NULL, NULL, 1, 2, 'us64', 0, '00:00:00', 0, NULL, 10, '459l50', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us66', 'cxy222', 'TVRJeg==', 'cxy222', 0, '333', NULL, NULL, NULL, 1, 2, 'us64', 0, '00:00:00', 0, NULL, 10, '31BL3o', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us67', 'cxy223', 'TVRJeg==', 'cxy223', 0, '333', NULL, NULL, NULL, 1, 2, 'us64', 0, '00:00:00', 0, NULL, 10, 'A5I116', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us68', 'zhouyunfei', 'TVRJeg==', NULL, NULL, '1111111111', NULL, 'zhouyunfei', '金融', 1, 1, NULL, 2, '0:4:28', 1, NULL, 10, 'MyqY2l', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us69', 'zhouyunfei1', 'TVRJeg==', 'zhouyunfei1', 0, '1111111111', NULL, NULL, NULL, 1, 2, 'us68', 0, '00:00:00', 0, NULL, 10, '1y62sD', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us7', '1111', 'TVRJeg==', NULL, NULL, '1111', NULL, NULL, NULL, 1, 1, NULL, 9, '00:00:00', 0, NULL, 10, 'o2C5yz', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us70', 'zhouyunfei2', 'TVRJeg==', 'zhouyunfei2', 0, '1111111111', NULL, NULL, NULL, 1, 2, 'us68', 0, '00:00:00', 0, NULL, 10, 'a34Y89', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us71', 'zhouyunfei3', 'TVRJeg==', 'zhouyunfei3', 0, '1111111111', NULL, NULL, NULL, 1, 2, 'us68', 0, '00:00:00', 0, NULL, 10, '12zL8L', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us72', 'zhouyunfei4', 'TVRJeg==', 'zhouyunfei4', 0, '1111111111', NULL, NULL, NULL, 1, 2, 'us68', 0, '00:00:00', 0, NULL, 10, 'X3B571', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us73', 'zhouyunfei5', 'TVRJeg==', 'zhouyunfei5', 0, '1111111111', NULL, NULL, NULL, 1, 2, 'us68', 0, '00:00:00', 0, NULL, 10, 'Hx10tg', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us74', 'zyl1', 'TVRJeg==', 'zyl1', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us2', 0, '6:41:5', 11, NULL, 10, 'v56769', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us75', 'zyl2', 'TVRJeg==', 'zyl2', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us2', 0, '0:34:15', 3, NULL, 10, '27m388', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us76', 'zyl11', 'TVRJeg==', 'zyl11', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us74', 0, '00:00:00', 0, NULL, 10, 'y74Yr8', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us77', 'zyl12', 'TVRJeg==', 'zyl12', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us74', 0, '00:00:00', 0, NULL, 10, 'Y8hG8s', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us78', 'zyl13', 'TVRJeg==', 'zyl13', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us74', 0, '00:00:00', 0, NULL, 10, '82w243', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us79', 'zyl3', 'TVRJeg==', 'zyl3', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us2', 0, '0:5:2', 2, NULL, 10, '9xQO07', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us8', 'hegang', 'TVRJeg==', '何刚', 0, '17001160998', 'legou_he@dell.com', 'dell销售', '1', 1, 1, NULL, 9, '00:00:00', 0, NULL, 10, 'q5R8XA', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us80', 'zyl4', 'TVRJeg==', 'zyl4', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us2', 0, '00:00:00', 0, NULL, 10, '9k04u4', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us81', 'zyl5', 'TVRJeg==', 'zyl5', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us2', 0, '0:5:21', 1, NULL, 10, '8j0Q24', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us82', 'blgzh', 'TVRJeg==', NULL, NULL, '11111', NULL, '北理工珠海', '教育', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, '15348s', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us83', 'sbtq', 'TVRJeg==', NULL, NULL, '12345', NULL, '圣邦天麒', '教育', 1, 1, NULL, 2, '00:00:00', 0, NULL, 10, 'O645xM', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us84', 'syb', 'TVRJeg==', '', 0, '15216733179', '', 'helloword', '教育', 1, 1, NULL, 2, '0:13:5', 3, NULL, 10, '3PI0F4', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us85', 'stu1', 'TVRJeg==', 'syb1', 0, '15216733179', '', NULL, NULL, 1, 2, 'us84', 0, '00:00:00', 0, NULL, 10, 'SB6FWS', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us86', 'stu2', 'TVRJeg==', 'syb2', 0, '15216733179', '', NULL, NULL, 1, 2, 'us84', 0, '00:00:00', 0, NULL, 10, '4250wN', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us87', 'stu3', 'TVRJeg==', 'syb3', 0, '15216733179', '', NULL, NULL, 1, 2, 'us84', 0, '00:00:00', 0, NULL, 10, '2r0Alt', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us88', 'cxy2', 'TVRJeg==', 'cxy2', 0, '123', NULL, NULL, NULL, 1, 2, 'us41', 0, '0:1:22', 3, NULL, 10, '851iC6', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us89', 'cxy3', 'TVRJeg==', 'cxy3', 0, '123', NULL, NULL, NULL, 1, 2, 'us41', 0, '00:00:00', 0, NULL, 10, '85Peq7', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us9', 'zyltest123', 'TVRJeg==', 'zyl', 0, '12231101', '135@163', '', '教育', 1, 1, NULL, 10, '00:00:00', 0, NULL, 10, 'UE9T5s', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us90', 'cxy4', 'TVRJeg==', 'cxy4', 0, '123', NULL, NULL, NULL, 1, 2, 'us41', 0, '00:00:00', 0, NULL, 10, '715S3u', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us91', 'zyl6', 'TVRJeg==', 'zyl6', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us2', 0, '00:00:00', 0, NULL, 10, '0B9T2d', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us92', 'zyl7', 'TVRJeg==', 'zyl7', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us2', 0, '00:00:00', 0, NULL, 10, 'T9Sv30', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us93', 'zyl8', 'TVRJeg==', 'zyl8', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us2', 0, '00:00:00', 0, NULL, 10, 'w59p03', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us94', 'zyl9', 'TVRJeg==', 'zyl9', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us2', 0, '00:00:00', 0, NULL, 10, '3P7rU0', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us95', 'zyl10', 'TVRJeg==', 'zyl10', 0, '15209713366', NULL, NULL, NULL, 1, 2, 'us2', 0, '00:00:00', 0, NULL, 10, 'y2q8Ne', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us96', 'txy', 'TVRJeg==', '', 0, '13483346057', '', 'txy', '教育', 1, 1, NULL, 20, '0:0:58', 2, NULL, 10, 'LL8F9w', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us97', 'txy1', 'TVRJeg==', 'txy1', 0, '13483346057', NULL, NULL, NULL, 1, 2, 'us96', 0, '0:21:26', 3, NULL, 10, '9ga3iA', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us98', 'txy2', 'TVRJeg==', 'txy2', 0, '13483346057', NULL, NULL, NULL, 1, 2, 'us96', 0, '1:15:19', 1, NULL, 10, '8q0o46', NULL, NULL, NULL);
+INSERT INTO `user` VALUES ('us99', 'txy3', 'TVRJeg==', 'txy3', 0, '13483346057', NULL, NULL, NULL, 1, 2, 'us96', 0, '1:9:7', 1, NULL, 10, 'qQ694B', NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for virtual_room_record

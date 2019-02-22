@@ -2,12 +2,14 @@ package com.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +49,12 @@ import sun.misc.BASE64Encoder;
 public class QianduanController {
 	
 	protected Logger logger = Logger.getLogger(this.getClass());
+	
+	@Value("${defaultRoomName}")
+	private String defaultRoomName;
+	
+	@Value("${defaultRoomPwd}")
+	private String defaultRoomPwd;
 	
 	@Autowired
 	private UserService userService;
@@ -761,6 +770,8 @@ public class QianduanController {
 		user.setInviteCode(StringRandom.getStringRandom(6));
 		
 		if(userService.insertSelective(user)>0) {
+			//添加房间和屏幕
+			insertRoomAndScreen(user);
 			argMap.put("code", "200");
 			argMap.put("message", user.getUsername()+"用户注册成功");
 			return JsonUtils.objectToJson(argMap);
@@ -819,6 +830,55 @@ public class QianduanController {
     	virtualRoom.setUserId(userId);
     	roomService.insertSelective(virtualRoom);
 		return "success";
+	}
+	
+	/**
+	 * 用户注册默认添加房间和屏幕
+	 * @author KONKA
+	 * @param user
+	 */
+	public void insertRoomAndScreen(User user) {
+		//添加房间
+		Room room = new Room();
+		room.setId(UUID.randomUUID().toString());
+		room.setNum(defaultRoomName);
+		room.setUserId(user.getId());
+		room.setPassword(defaultRoomPwd);
+		
+		roomService.insertSelective(room);
+		
+		//添加屏幕
+		List<String> screenIdList = screenService.selectAllId();
+		//教育类用户默认屏幕数为2
+		//企业类用户默认屏幕数为1
+		int num = 0;
+		if(user.getEnterpriseType()==1) {
+			num = 2;
+		}else if(user.getEnterpriseType()==2) {
+			num = 1;
+		}
+		for (int i = 0; i < num; i++) {
+			String newId=ProduceId.produceUserId(screenIdList);
+			screenIdList.add(newId);
+			Collections.sort(screenIdList);
+			Screen screen=new Screen();
+			screen.setId(newId);
+			
+			String username=newId.replace("sc", "");
+			if(username.length()<8) {
+				int cishu=8-username.length();
+				for(int x=0;x<cishu;x++) {
+					username="0"+username;
+				}
+			}
+			screen.setUsername(username);
+			
+			screen.setPassword("123");
+			screen.setRoomId(room.getId());
+			screen.setUserId(user.getId());
+			screen.setDuration("00:00:00");
+			screen.setTimes(0);
+		}
 	}
 	
 	/**
