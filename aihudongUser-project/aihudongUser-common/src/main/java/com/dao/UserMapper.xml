@@ -307,6 +307,9 @@
     	<if test="openId!=null">
     		and open_id=#{openId}
     	</if>
+    	<if test="unionId!=null">
+    		and union_id=#{unionId}
+    	</if>
     	<if test="inviteCode!=null">
     		and invite_code=#{inviteCode}
     	</if>

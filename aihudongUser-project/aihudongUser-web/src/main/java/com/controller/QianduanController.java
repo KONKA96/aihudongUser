@@ -84,7 +84,7 @@ public class QianduanController {
 	@RequestMapping(value = { "/userLogin" }, produces = { "text/json;charset=UTF-8" })
 	public String UserLogin(@RequestParam(required = false) String username,
 			@RequestParam(required = false) String password, @RequestParam(required = false) String sid,
-			@RequestParam(required = false) String serverhost, @RequestParam(required = false) String openid,
+			@RequestParam(required = false) String serverhost, @RequestParam(required = false) String openid, @RequestParam(required = false) String unionid,
 			@RequestParam(required = false) String dandianFlag,HttpServletResponse response, HttpServletRequest request, ModelMap modelMap) throws IOException {
 		response.setCharacterEncoding("utf-8");
 		response.setHeader("Access-Control-Allow-Origin", "*");
@@ -93,7 +93,8 @@ public class QianduanController {
 		//返回参数集合
 		Map<String, Object> argMap = new HashMap<>();
 
-		argMap.put("username", username);
+		if(username!=null && !"".equals(username))
+			argMap.put("username", username);
 		
 		Screen screen = new Screen();
 		User user = new User();
@@ -121,6 +122,9 @@ public class QianduanController {
 				argMap.put("message", "该机器绑定多个屏幕，请联系管理员!");
 				return JsonUtils.objectToJson(argMap);
 			}
+		}else if(unionid != null) {
+			map.put("unionId", unionid);
+			selectAllUser = userService.selectAllUser(map);
 		}
 		
 		else {
@@ -190,11 +194,17 @@ public class QianduanController {
 
 			record.setUserId(user.getId());
 			record.setRole(user.getRole());
+			argMap.put("username", user.getUsername());
 			argMap.put("role", user.getRole());
 			argMap.put("truename", user.getTruename());
 			
 			if (openid != null && openid != "") {
 				user.setOpenId(openid);
+				userService.updateByPrimaryKeySelective(user);
+			}
+			
+			if (unionid != null && unionid != "") {
+				user.setUnionId(unionid);
 				userService.updateByPrimaryKeySelective(user);
 			}
 			
@@ -384,14 +394,14 @@ public class QianduanController {
 		HttpSession session = (HttpSession) servletContext.getAttribute(usernameUser);
 		if (session == null) {
 			argMap.put("code", Integer.valueOf(1002));
-			argMap.put("message", "session失效");
+			argMap.put("message", "会话已失效，请重新登录");
 			return JsonUtils.objectToJson(argMap);
 		}
 		User user = (User) session.getAttribute("user");
 		
 		if(user==null||user.getId()==null) {
 			argMap.put("code", Integer.valueOf(1002));
-			argMap.put("message", "session失效");
+			argMap.put("message", "会话已失效，请重新登录");
 			return JsonUtils.objectToJson(argMap);
 		}
 		//查询参数集合
@@ -767,8 +777,25 @@ public class QianduanController {
 		String newId = ProduceId.produceUserId(idList);
 		user.setId(newId);
 		user.setRole(1);
-		user.setInviteCode(StringRandom.getStringRandom(6));
+		List<User> allUserList = userService.selectAllUser(null);
+		A:while(true) {
+			String invitedCode = StringRandom.getStringRandom(6);
+			
+			int i = 0;
+			for (User uu : allUserList) {
+				if(uu.getInviteCode().equals(invitedCode)) {
+					break;
+				}
+				i++;
+				if(i == allUserList.size()) {
+					user.setInviteCode(invitedCode);
+					break A;
+				}
+			}
+		}
 		
+		
+		user.setEnterpriseType(2);
 		if(userService.insertSelective(user)>0) {
 			//添加房间和屏幕
 			insertRoomAndScreen(user);
@@ -878,6 +905,8 @@ public class QianduanController {
 			screen.setUserId(user.getId());
 			screen.setDuration("00:00:00");
 			screen.setTimes(0);
+			
+			screenService.insertSelective(screen);
 		}
 	}
 	

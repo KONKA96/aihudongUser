@@ -33,6 +33,7 @@ import com.util.ExportExcel;
 import com.util.PageUtil;
 import com.util.ProduceId;
 import com.util.ProduceVirtualRoomIdUtil;
+import com.util.StringRandom;
 
 import net.sf.json.JSONObject;
 import sun.misc.BASE64Decoder;
@@ -156,21 +157,26 @@ public class ScreenController {
     	List<Screen> screenList = screenService.selectAllScreen(map);
     	//查询该用户的剩余屏幕
     	user.setScreenRemain(user.getScreenNum()-screenList.size());
-    	if(user.getScreenRemain()<Integer.parseInt(number)) {
-    		jsonObject.put("min", "min");
-    		return jsonObject.toString();
-    	}
+    	
     	
     	room.setUserId(user.getId());
     	Room roomN=roomService.selectScreenByRoom(room);
     	List<Screen> screenListOld=new ArrayList<>();
+    	
+    	//记录房间本来有的屏幕数量
+    	int oldNum = 0;
     	//房间不存在，则新建房间
     	if(roomN==null) {
     		session.setAttribute("room", room);
     	}else {
+    		oldNum = roomN.getScreenList().size();
     		room=roomN;
     		screenListOld=room.getScreenList();
     		jsonObject.put("screenListOld", screenListOld);
+    	}
+    	if(user.getScreenRemain()+oldNum<Integer.parseInt(number)) {
+    		jsonObject.put("min", "min");
+    		return jsonObject.toString();
     	}
     	jsonObject.put("room", room);
     	
@@ -363,6 +369,22 @@ public class ScreenController {
 			if(userList.size()!=0) {
 				logger.info(user.getTelephone()+"用户已经存在，注册失败");
 				return "phoneexist";
+			}
+		}
+		List<User> allUserList = userService.selectAllUser(null);
+		A:while(true) {
+			String invitedCode = StringRandom.getStringRandom(6);
+			
+			int i = 0;
+			for (User uu : allUserList) {
+				if(uu.getInviteCode().equals(invitedCode)) {
+					break;
+				}
+				i++;
+				if(i == allUserList.size()) {
+					user.setInviteCode(invitedCode);
+					break A;
+				}
 			}
 		}
 		List<String> idList = userService.selectAllId();

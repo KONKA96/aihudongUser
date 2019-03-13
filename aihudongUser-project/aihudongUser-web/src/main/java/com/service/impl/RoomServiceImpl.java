@@ -51,5 +51,10 @@ public class RoomServiceImpl implements RoomService {
 		// TODO Auto-generated method stub
 		return roomMapper.selectVirtualRoom(map);
 	}
+	@Override
+	public int deleteByPrimaryKey(Room room) {
+		// TODO Auto-generated method stub
+		return roomMapper.deleteByPrimaryKey(room.getId());
+	}
 
 }

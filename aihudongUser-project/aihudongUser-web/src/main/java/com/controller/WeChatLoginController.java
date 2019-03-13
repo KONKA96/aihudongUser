@@ -42,6 +42,8 @@ public class WeChatLoginController {
 	private String redirect_uri;
 	@Value("${appSecret}")
 	private String appSecret;
+	@Value("${userAdmin_redirect_uri}")
+	private String userAdmin_redirect_uri;
 	@Autowired
 	private UserService userService;
 	@Autowired
@@ -71,8 +73,29 @@ public class WeChatLoginController {
 		response.setHeader("Access-Control-Allow-Origin", "*");
 
 		String url = "https://open.weixin.qq.com/connect/qrconnect?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=snsapi_login&state=STATE#wechat_redirect";
-		url = url.replace("APPID", this.appid);
-		url = url.replace("REDIRECT_URI", this.redirect_uri);
+		url = url.replace("APPID", appid);
+		url = url.replace("REDIRECT_URI", redirect_uri);
+		if(state!=null && !"".equals(state))
+			url = url.replace("STATE", state);
+		return JsonUtils.objectToJson(url);
+	}
+	
+	/**
+	 * 管理后台获取二维码
+	 * @author KONKA
+	 * @param session
+	 * @param response
+	 * @param state
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = { "/userAdminGetWeiChatInfo" }, produces = { "text/json;charset=UTF-8" })
+	public String userAdminGetWeiChatInfo(HttpSession session, HttpServletResponse response, @RequestParam(required = false) String state) {
+		response.setHeader("Access-Control-Allow-Origin", "*");
+
+		String url = "https://open.weixin.qq.com/connect/qrconnect?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=snsapi_login&state=STATE#wechat_redirect";
+		url = url.replace("APPID", appid);
+		url = url.replace("REDIRECT_URI", userAdmin_redirect_uri);
 		if(state!=null && !"".equals(state))
 			url = url.replace("STATE", state);
 		return JsonUtils.objectToJson(url);
@@ -123,6 +146,7 @@ public class WeChatLoginController {
 			modelMap.put("code", Integer.valueOf(200));
 			modelMap.put("serverhost", state);
 			modelMap.put("openid", openid);
+			modelMap.put("unionid", unionid);
 			modelMap.put("message", "您未绑定账号，请先绑定！");
 			return "redirect:https://" + state + "/html5client/login";
 		}
@@ -158,6 +182,58 @@ public class WeChatLoginController {
 		session.setAttribute("userId", record.getUserId());
 
 		return "redirect:https://" + state + "/html5client/login";
+	}
+	
+	/**
+	 * 管理后台获取AccessToken
+	 * @author KONKA
+	 * @param code
+	 * @param state
+	 * @param session
+	 * @param modelMap
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/userAdminGetAccessToken")
+	public String userAdminGetAccessToken(@RequestParam String code, @RequestParam String state, HttpSession session,
+			ModelMap modelMap,HttpServletResponse response) {
+		response.setCharacterEncoding("utf-8");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		ServletContext servletContext = session.getServletContext();
+		
+		String url = "https://api.weixin.qq.com/sns/oauth2/access_token";
+		String param = "appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
+		param = param.replace("APPID", this.appid);
+		param = param.replace("SECRET", this.appSecret);
+		param = param.replace("CODE", code);
+		String sendGET = HttpUtil.sendGET(url, param);
+		JSONObject jsonObject = JSONObject.fromObject(sendGET);
+		//String refresh_token = jsonObject.getString("refresh_token");
+		String openid = jsonObject.getString("openid");
+		String access_token = jsonObject.getString("access_token");
+		String unionid = jsonObject.getString("unionid");
+		
+		System.out.println(unionid);
+
+		String userInfo = getUserInfo(access_token, openid);
+		logger.info("用户信息"+userInfo);
+		
+		Map<String, Object> hashMap = new HashMap<>();
+		hashMap.put("openId", openid);
+		List<User> userList = userService.selectAllUser(hashMap);
+		if(userList==null || userList.size()==0) {
+			modelMap.put("code", Integer.valueOf(200));
+			modelMap.put("serverhost", state);
+			modelMap.put("openid", openid);
+			modelMap.put("message", "您未绑定账号，请先绑定！");
+			return "redirect:index/toIndex";
+		}
+		else {
+			User user = userList.get(0);
+			session.setAttribute("user", user);
+			
+		}
+		return "redirect:/index/toIndex";
 	}
 
 	public void reflushAccessToken(String refresh_token) {

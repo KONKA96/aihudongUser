@@ -47,8 +47,10 @@
 		    <mvc:interceptor>
 		        <mvc:mapping path="/**/*"/>
 		        <mvc:exclude-mapping path="/front/*"/>  
-		        <mvc:exclude-mapping path="/index/*"/>
+		        <mvc:exclude-mapping path="/index/login"/>
+		        <mvc:exclude-mapping path="/index/test"/>
 		        <mvc:exclude-mapping path="/weichat/*"/>
+		        <mvc:exclude-mapping path="/xiaoChengXu/*"/>
 		        <mvc:exclude-mapping path="/rtsp/*"/>
 		        <mvc:exclude-mapping path="/screen/insertScreen"/>
 		        <mvc:exclude-mapping path="/**/fonts/*"/>

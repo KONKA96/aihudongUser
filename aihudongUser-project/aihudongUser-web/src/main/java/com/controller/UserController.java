@@ -33,6 +33,7 @@ import com.util.JsonUtils;
 import com.util.PageUtil;
 import com.util.ProduceId;
 import com.util.ProduceVirtualRoomIdUtil;
+import com.util.StringRandom;
 
 import net.sf.json.JSONObject;
 import sun.misc.BASE64Encoder;
@@ -179,6 +180,9 @@ public class UserController {
 		List<User> selectUserByAdmin = userService.selectAllUser(map);
 		List<User> userList=new ArrayList<>();
 		
+		/*String pwd = new String(encoder.encode(defaultUserPwd.getBytes()));
+		pwd = new String(encoder.encode(pwd.getBytes()));*/
+		
 		int index=1;
 		for(int i=1;i<=Integer.parseInt(number);i++) {
 			
@@ -200,13 +204,12 @@ public class UserController {
 			uu.setEmail(user.getEmail());
 			uu.setPassword(defaultUserPwd);
 			
-			if(uu.getPassword()!=null) {
-				String pwd = new String(encoder.encode(user.getPassword().getBytes()));
-				pwd = new String(encoder.encode(pwd.getBytes()));
-				user.setPassword(pwd);
+			//教育用户创建子用户权限为学生权限，企业用户创建子用户为教师权限
+			if(user.getEnterpriseType()==1) {
+				uu.setRole(2);
+			}else if(user.getEnterpriseType()==2) {
+				uu.setRole(1);
 			}
-			
-			uu.setRole(2);
 			uu.setAdminId(user.getId());
 			uu.setScreenNum(0);
 			uu.setDuration("00:00:00");
@@ -256,6 +259,23 @@ public class UserController {
 				String pwd = new String(encoder.encode(user.getPassword().getBytes()));
 				pwd = new String(encoder.encode(pwd.getBytes()));
 				user.setPassword(pwd);
+			}
+			
+			List<User> allUserList = userService.selectAllUser(null);
+			A:while(true) {
+				String invitedCode = StringRandom.getStringRandom(6);
+				
+				int i = 0;
+				for (User uu : allUserList) {
+					if(uu.getInviteCode().equals(invitedCode)) {
+						break;
+					}
+					i++;
+					if(i == allUserList.size()) {
+						user.setInviteCode(invitedCode);
+						break A;
+					}
+				}
 			}
 			
 			if(userService.insertSelective(user)>0) {

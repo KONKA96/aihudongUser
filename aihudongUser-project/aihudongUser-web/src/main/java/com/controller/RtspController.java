@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +33,9 @@ public class RtspController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/selectAllRtsp", produces = { "text/json;charset=UTF-8" })
-	public String selectAllRtsp(Rtsp rtsp) {
+	public String selectAllRtsp(Rtsp rtsp,HttpServletResponse response) {
+		response.setCharacterEncoding("utf-8");
+		response.setHeader("Access-Control-Allow-Origin", "*");
 		//查询参数集合
 		Map<String,Object> map = new HashMap<>();
 		//返回参数集合

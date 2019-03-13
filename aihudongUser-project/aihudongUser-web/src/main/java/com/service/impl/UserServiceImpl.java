@@ -1,5 +1,6 @@
 package com.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,8 +14,6 @@ import com.model.User;
 import com.service.RoomService;
 import com.service.UserService;
 import com.util.ProduceVirtualRoomIdUtil;
-
-import sun.misc.BASE64Encoder;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,6 +32,26 @@ public class UserServiceImpl implements UserService {
 
 	public int deleteByPrimaryKey(User user) {
 		// TODO Auto-generated method stub
+		//删除用户下所属的虚拟教室
+		Map<String,Object> map = new HashMap<>();
+		map.put("userId", user.getId());
+		List<Room> RoomList = roomService.selectVirtualRoom(map);
+		for (Room room : RoomList) {
+			roomService.deleteByPrimaryKey(room);
+		}
+		//删除真实教室
+		Room room = new Room();
+		room.setUserId(user.getId());
+		try {
+			//可能数据会出现一个人多个教室的情况
+			room = roomService.selectScreenByRoom(room);
+			if(room!=null)
+				roomService.deleteByPrimaryKey(room);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return userMapper.deleteByPrimaryKey(user.getId());
 	}
 
@@ -66,6 +85,10 @@ public class UserServiceImpl implements UserService {
 		if(user.getMaxFileNum()==null) {
 			user.setMaxFileNum(10);
 		}
+		if(user.getEnterpriseType()==null) {
+			user.setEnterpriseType(2);
+		}
+		
 		return userMapper.insertSelective(user);
 	}
 

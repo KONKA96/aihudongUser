@@ -19,4 +19,6 @@ public interface RoomService {
 	Room selectByPrimaryKey(Room room);
 
 	int updateByPrimaryKeySelective(Room room);
+	
+	int deleteByPrimaryKey(Room room);
 }

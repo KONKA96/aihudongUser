@@ -93,7 +93,7 @@
 			return false;
 		} */
 		$("#tbodyT").empty();
-		if($("#number").val()>=1 && $("#number").val()<=30){
+		if($("#number").val()>=1 && $("#number").val()<=50){
 			$("#diaLogDivT").css("display", "inline-block");
 			$.ajax({
 				url:"/aihudongUser-web/user/produceUsers",
